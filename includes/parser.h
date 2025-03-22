@@ -10,31 +10,55 @@
 # include <float.h>
 # include "libft.h"
 
+# define X 0
+# define Y 1
+# define Z 2
+# define SET 0
+# define GET 1
+# define ENV 0
+# define OBJ 1
+# define ARGS "0123456789.,ACLsplcy"
+
 enum {
-    AMBIENT,
-    CAMERA,
-    LIGHT,
-    PLANE,
-    SPHERE,
-    CYLINDER
+    A,
+    C,
+    L,
+    PL,
+    SP,
+    CY
 };
+
+//環境設定用のデータとオブジェクト用のデータを分ける
+//環境設定用のデータは一つにまとめる
+//flagでA,C,Lのデータ入力を監視し、2が入れば Error->終了
+//color情報は一つにまとめる　https://harm-smits.github.io/42docs/libs/minilibx/colors.html
+//vectorが(0,0,0)の場合は Error->終了
+
+typedef struct s_env
+{
+    int     flag[3];
+    int     amb_trgb;
+    double  cam_xyz[3];
+    double  cam_vector[3];
+    double  cam_degree;
+    double  light_xyz[3];
+    int     light_trgb;
+}   t_env;
+
 
 typedef struct s_data
 {
-    int             identifier;
-    double          coordinate[3];
+    int             id;
+    double          xyz[3];
     double          vector[3];
-    unsigned int    rgb[3];
-    double          ratio;
-    unsigned int    degree;
+    int             rgb;
     double          diameter;
     double          height;
+    struct t_data          *next;
 }  t_data;
 
 void    print_error_and_exit(void);
 void    open_file(char *file_name, int *fd);
-char	*get_next_line(int fd);
-
-
+double  ft_atof(char *nptr);
 
 #endif
