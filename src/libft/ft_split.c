@@ -6,46 +6,46 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 18:54:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/03/20 19:37:46 by tsururukako      ###   ########.fr       */
+/*   Updated: 2025/03/22 01:23:23 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_count_i(char const *s, char c)
+static int	ft_count_i(char const *s, char *str)
 {
 	int	count;
 
 	count = 0;
 	while (*s)
 	{
-		while (*s && *s == c)
+		while (*s && ft_strchr(str, *s))
 			s++;
 		if (*s)
 			count++;
-		while (*s && *s != c)
+		while (*s && !ft_strchr(str, *s))
 			s++;
 	}
 	return (count);
 }
 
-static char	*ft_make_string_i(char const *s, char c)
+static char	*ft_make_string_i(char const *s, char *str)
 {
 	size_t	j;
 	size_t	len;
-	char	*str;
+	char	*tmp;
 
 	len = 0;
-	while (s[len] && (s[len] != c))
+	while (s[len] && !ft_strchr(str, s[len]))
 		len++;
-	str = (char *)ft_calloc((len + 1), sizeof(char));
-	if (!str)
+	tmp = (char *)ft_calloc((len + 1), sizeof(char));
+	if (!tmp)
 		return (NULL);
 	j = -1;
 	while (++j < len)
-		str[j] = s[j];
-	str[j] = '\0';
-	return (str);
+		tmp[j] = s[j];
+	tmp[j] = '\0';
+	return (tmp);
 }
 
 static void	*free_split(char **result, int i)
@@ -57,29 +57,29 @@ static void	*free_split(char **result, int i)
 	return (NULL);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char *str)
 {
 	int		i;
 	char	**result;
-
+	
 	if (!s)
 		exit(1); //TODO
-	result = ft_calloc(ft_count_i(s, c) + 1, sizeof(char *));
+	result = ft_calloc(ft_count_i(s, str) + 1, sizeof(char *));
 	i = 0;
 	while (*s)
 	{
-		while (*s && *s == c)
+		while (*s && ft_strchr(str, *s))
 			s++;
-		if (*s && *s != c)
+		if (*s && !ft_strchr(str, *s))
 		{
-			result[i] = ft_make_string_i(s, c);
+			result[i] = ft_make_string_i(s, str);
 			if (!result[i])
 			{
 				free_split(result, i);
 				exit(1);
 			}
 			i++;
-			while (*s && *s != c)
+			while (*s && !ft_strchr(str, *s))
 				s++;
 		}
 	}
