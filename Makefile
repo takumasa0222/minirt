@@ -1,8 +1,12 @@
 NAME	= minirt
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
-# FLAGS	+= -fsanitize=thread -g
-SRCS	= src/main.c
+FLAGS	+= -fsanitize=thread -g
+SRCS	= src/main.c \
+		  src/parser/open_file.c \
+		  src/parser/error_msg.c \
+		  src/parser/ft_atof.c
+		#   src/parser/setter_getter.c
 OBJS	= $(SRCS:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a
