@@ -15,6 +15,7 @@
 # define GET 1
 # define ENV 0
 # define OBJ 1
+# define SPACE "\t\n\v\r\f "
 # define ARGS "0123456789.,ACLsplcy"
 
 enum {
@@ -61,9 +62,14 @@ typedef struct s_data
     struct s_data   *next;
 }  t_data;
 
-void    print_error_and_exit(char *message);
+void    print_error_and_exit(char *func_name, char *message);
 void    open_file(char *file_name, int *fd);
 double  ft_atof(char *nptr);
 void    *safe_malloc(size_t count, size_t size);
+int     check_first_arg(char *str);
+void    make_information(char *line);
+void    parser(char *filename);
+void	free_split(char **split);
+unsigned int    make_trgb(double t, int r, int g, int b);
 
 #endif

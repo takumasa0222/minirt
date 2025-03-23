@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 13:24:25 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/03/22 10:07:18 by tsururukako      ###   ########.fr       */
+/*   Updated: 2025/03/23 17:31:22 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 
 # define TRUE	1
 # define FALSE	0
-# define SPACE "\t\n\v\r\f "
 
 // typedef struct s_list
 // {
