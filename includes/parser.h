@@ -8,6 +8,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include <float.h>
+# include <errno.h>
 # include "libft.h"
 
 # define X 0
@@ -45,7 +46,6 @@ typedef struct s_env
     int     light_trgb;
 }   t_env;
 
-
 typedef struct s_data
 {
     int             id;
@@ -54,11 +54,12 @@ typedef struct s_data
     int             rgb;
     double          diameter;
     double          height;
-    struct t_data          *next;
+    struct s_data   *next;
 }  t_data;
 
-void    print_error_and_exit(void);
+void    print_error_and_exit(char *message);
 void    open_file(char *file_name, int *fd);
 double  ft_atof(char *nptr);
+void    *safe_malloc(size_t count, size_t size);
 
 #endif

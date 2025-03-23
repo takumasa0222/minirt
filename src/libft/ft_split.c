@@ -6,11 +6,12 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 18:54:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/03/22 01:23:23 by tsururukako      ###   ########.fr       */
+/*   Updated: 2025/03/22 18:27:18 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "parser.h"
 
 static int	ft_count_i(char const *s, char *str)
 {
@@ -38,7 +39,8 @@ static char	*ft_make_string_i(char const *s, char *str)
 	len = 0;
 	while (s[len] && !ft_strchr(str, s[len]))
 		len++;
-	tmp = (char *)ft_calloc((len + 1), sizeof(char));
+	// tmp = (char *)ft_calloc((len + 1), sizeof(char));
+	tmp = (char *)safe_malloc(len + 1, sizeof(char));
 	if (!tmp)
 		return (NULL);
 	j = -1;
@@ -64,7 +66,8 @@ char	**ft_split(char const *s, char *str)
 	
 	if (!s)
 		exit(1); //TODO
-	result = ft_calloc(ft_count_i(s, str) + 1, sizeof(char *));
+	// result = ft_calloc(ft_count_i(s, str) + 1, sizeof(char *));
+	result = (char **)safe_malloc(ft_count_i(s, str) + 1, sizeof(char *));
 	i = 0;
 	while (*s)
 	{

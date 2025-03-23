@@ -4,5 +4,5 @@ void open_file(char *file_name, int *fd)
 {
     *fd = open(file_name, O_RDONLY);
     if (*fd == -1)
-        print_error_and_exit();
+        print_error_and_exit("couldn't open file");
 }
