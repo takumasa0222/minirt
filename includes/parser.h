@@ -11,9 +11,6 @@
 # include <errno.h>
 # include "libft.h"
 
-# define X 0
-# define Y 1
-# define Z 2
 # define SET 0
 # define GET 1
 # define ENV 0
@@ -35,23 +32,30 @@ enum {
 //color情報は一つにまとめる　https://harm-smits.github.io/42docs/libs/minilibx/colors.html
 //vectorが(0,0,0)の場合は Error->終了
 
+typedef struct s_xyx
+{
+    double  x;
+    double  y;
+    double  z;
+}   t_xyz;
+
 typedef struct s_env
 {
-    int     flag[3];
-    int     amb_trgb;
-    double  cam_xyz[3];
-    double  cam_vector[3];
-    double  cam_degree;
-    double  light_xyz[3];
-    int     light_trgb;
+    int             flag[3];
+    unsigned int    amb_trgb;
+    t_xyz           cam_xyz;
+    t_xyz           cam_vector;
+    double          cam_degree;
+    t_xyz           light_xyz;
+    int             light_trgb;
 }   t_env;
 
 typedef struct s_data
 {
     int             id;
-    double          xyz[3];
-    double          vector[3];
-    int             rgb;
+    t_xyz           xyz;
+    t_xyz           vector;
+    unsigned int    rgb;
     double          diameter;
     double          height;
     struct s_data   *next;

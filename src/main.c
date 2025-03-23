@@ -74,93 +74,93 @@ void    parser(char *filename)
 
 }
 
-// unsigned int    make_trgb(double t, int r, int g, int b)
-// {
-//     t = round(256 * t);
-//     return ((int)t << 24 | r << 16 | g << 8 | b);
-// }
+unsigned int    make_trgb(double t, int r, int g, int b)
+{
+    t = round(255 * t);
+    return ((int)t << 24 | r << 16 | g << 8 | b);
+}
 
-// void    practice(void)
-// {
-//     t_env   *env;
-//     t_data  *data;
-//     t_data  *head;
+void    practice(void)
+{
+    t_env   *env;
+    t_data  *data;
+    t_data  *head;
 
-//     //A,C,L data
-//     env = (t_env *)malloc(sizeof(t_env));
-//     env->amb_trgb = make_trgb(0.2, 255, 255, 255);
-//     env->cam_xyz[X] = -50;
-//     env->cam_xyz[Y] = 0;
-//     env->cam_xyz[Z] = 20;
-//     env->cam_vector[X] = 0;
-//     env->cam_vector[Y] = 0;
-//     env->cam_vector[Z] = 1;
-//     env->cam_degree = 70;
-//     env->light_trgb = make_trgb(0.7, 255, 255, 255);
-//     env->light_xyz[X] = -40;
-//     env->light_xyz[Y] = 0;
-//     env->light_xyz[Z] = 20;
+    //A,C,L data
+    env = (t_env *)malloc(sizeof(t_env));
+    env->amb_trgb = make_trgb(0.2, 255, 255, 255);
+    env->cam_xyz.x = -50;
+    env->cam_xyz.y = 0;
+    env->cam_xyz.z = 20;
+    env->cam_vector.x = 0;
+    env->cam_vector.y = 0;
+    env->cam_vector.z = 1;
+    env->cam_degree = 70;
+    env->light_trgb = make_trgb(0.7, 255, 255, 255);
+    env->light_xyz.x = -40;
+    env->light_xyz.y = 0;
+    env->light_xyz.z = 20;
 
-//     //pl data
-//     data = (t_data *)malloc(sizeof(t_data));
-//     head = data;
-//     data->id = PL;
-//     data->xyz[X] = 0;
-//     data->xyz[Y] = 0;
-//     data->xyz[Z] = 0;
-//     data->vector[X] = 0.1;
-//     data->vector[Y] = 0;
-//     data->vector[Z] = 0;
-//     data->rgb = make_trgb(0, 255, 0, 255);
-//     data->next = NULL;
+    //pl data
+    data = (t_data *)malloc(sizeof(t_data));
+    head = data;
+    data->id = PL;
+    data->xyz.x = 0;
+    data->xyz.y = 0;
+    data->xyz.z = 0;
+    data->vector.x = 0.1;
+    data->vector.y = 0;
+    data->vector.z = 0;
+    data->rgb = make_trgb(0, 255, 0, 255);
+    data->next = NULL;
 
-//     //sp data
-//     t_data *new1;
-//     new1 = (t_data *)malloc(sizeof(t_data));
-//     head->next = new1;
-//     new1->id = SP;
-//     new1->xyz[X] = 0;
-//     new1->xyz[Y] = 0;
-//     new1->xyz[Z] = 20;
-//     new1->diameter = 20;
-//     new1->rgb = make_trgb(0, 255, 0, 0);
-//     new1->next = NULL;
+    //sp data
+    t_data *new1;
+    new1 = (t_data *)malloc(sizeof(t_data));
+    head->next = new1;
+    new1->id = SP;
+    new1->xyz.x = 0;
+    new1->xyz.y = 0;
+    new1->xyz.z = 20;
+    new1->diameter = 20;
+    new1->rgb = make_trgb(0, 255, 0, 0);
+    new1->next = NULL;
 
-//     //cy data;
-//     t_data *new2;
-//     new2 = (t_data *)malloc(sizeof(t_data));
-//     head->next->next = new2;
-//     new2->id = CY;
-//     new2->xyz[X] = 50.0;
-//     new2->xyz[Y] = 0.0;
-//     new2->xyz[Z] = 20.5;
-//     new2->vector[X] = 0;
-//     new2->vector[Y] = 0;
-//     new2->vector[Z] = 1.0;
-//     new2->diameter = 14.2;
-//     new2->height = 21.42;
-//     new2->rgb = make_trgb(0, 10, 0, 255);
+    //cy data;
+    t_data *new2;
+    new2 = (t_data *)malloc(sizeof(t_data));
+    head->next->next = new2;
+    new2->id = CY;
+    new2->xyz.x = 50.0;
+    new2->xyz.y = 0.0;
+    new2->xyz.z = 20.5;
+    new2->vector.x = 0;
+    new2->vector.y = 0;
+    new2->vector.z = 1.0;
+    new2->diameter = 14.2;
+    new2->height = 21.42;
+    new2->rgb = make_trgb(0, 10, 0, 255);
 
-//     ft_printf(1, "\nA:TRGB  = %X\n", env->amb_trgb);
-//     printf("C:xyz   = (%0.1f, %0.1f, %0.1f)\n", env->cam_xyz[X], env->cam_xyz[Y], env->cam_xyz[Z]);
-//     printf(" :vector= (%0.1f, %0.1f, %0.1f)\n", env->cam_vector[X], env->cam_vector[Y], env->cam_vector[Z]);
-//     printf("L:xyz   = (%0.1f, %0.1f, %0.1f)\n", env->light_xyz[X], env->light_xyz[Y], env->light_xyz[Z]);
-//     ft_printf(1, " :TRGB  = %X\n", env->light_trgb);
-//     printf("\n3 = pl, 4 = sp, 5 = cy\n");
-//     while (data)
-//     {
-//         printf("%d:xyz   = (%0.1f, %0.1f, %0.1f)\n", data->id, data->xyz[X], data->xyz[Y], data->xyz[Z]);
-//         if (data->id == PL || data->id == CY)
-//             printf(" :vector= (%0.1f, %0.1f, %0.1f)\n", data->vector[X], data->vector[Y], data->vector[Z]);
-//         ft_printf(1, " :RGB   = %X\n", data->rgb);
-//         if (data->id == SP || data->id == CY)
-//             printf(" :diameter= %0.1f\n", data->diameter);
-//         if (data->id == CY)
-//             printf(" :height= %0.1f\n", data->height);
-//         data = data->next;
-//     }
-//     exit(1);
-// }
+    printf("\nA:TRGB  = %X\n", env->amb_trgb);
+    printf("C:xyz   = (%0.1f, %0.1f, %0.1f)\n", env->cam_xyz.x, env->cam_xyz.y, env->cam_xyz.z);
+    printf(" :vector= (%0.1f, %0.1f, %0.1f)\n", env->cam_vector.x, env->cam_vector.y, env->cam_vector.z);
+    printf("L:xyz   = (%0.1f, %0.1f, %0.1f)\n", env->light_xyz.x, env->light_xyz.y, env->light_xyz.z);
+    printf(" :TRGB  = %X\n", env->light_trgb);
+    printf("\n3 = pl, 4 = sp, 5 = cy\n");
+    while (data)
+    {
+        printf("%d:xyz   = (%0.1f, %0.1f, %0.1f)\n", data->id, data->xyz.x, data->xyz.y, data->xyz.z);
+        if (data->id == PL || data->id == CY)
+            printf(" :vector= (%0.1f, %0.1f, %0.1f)\n", data->vector.x, data->vector.y, data->vector.z);
+        printf(" :RGB   = %X\n", data->rgb);
+        if (data->id == SP || data->id == CY)
+            printf(" :diameter= %0.1f\n", data->diameter);
+        if (data->id == CY)
+            printf(" :height= %0.1f\n", data->height);
+        data = data->next;
+    }
+    exit(1);
+}
 
 int main(int argc, char **argv)
 {
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
 
     if (argc != 2)
         print_error_and_exit("there should be one argument");
-    // practice();
+    practice();
     // env = NULL;
     // data = NULL;
     parser(argv[1]);
