@@ -53,7 +53,7 @@ char    *calc_decimal(double *decimal, char *nptr, double integer)
         if (num > DBL_MAX / 10)
             break ;
         num = num * 10 + *nptr++ - '0';
-        if (integer + ((double)num / pow(10.0, power)) < DBL_MIN)
+        if (num > 0 && (integer + ((double)num / pow(10.0, power)) < DBL_MIN))
         {
             num = 0;  
             break ;
