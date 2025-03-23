@@ -47,8 +47,6 @@ SRCS	= ft_isalpha.c \
 # 		  ft_lstsize.c
 OBJS	= $(SRCS:.c=.o)
 # OBJS_B	= $(SRCS_B:.c=.o)
-# OBJS_GNL = $(SRC_GNL:.c=.o)
-# OBJS_PRF = $(SRC_PRF:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror 
 HEADDIR	= ../../includes
@@ -59,13 +57,16 @@ HEADDIR	= ../../includes
 $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
-# bonus: $(NAME) $(OBJS_B) 
-# 	ar rcs $(NAME) $(OBJS_B) 
+# $(NAME): $(OBJS) $(OBJS_B)
+# 	ar rcs $(NAME) $(OBJS) $(OBJS_B)
 
 all: $(NAME)
 
 clean:
 	rm -f $(OBJS)
+
+# clean:
+# 	rm -f $(OBJS) $(OBJS_B)
 
 fclean: clean
 	rm -f $(NAME)
