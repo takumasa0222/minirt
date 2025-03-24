@@ -9,7 +9,6 @@ void    parser(char *filename)
     open_file(filename, &fd);
     env = (t_env *)safe_malloc(1, sizeof(t_env));
     init_env(env);
-    printf("env->light_xyz.x = %f\n", env->light_xyz.x);
     while (1)
     {
         line = NULL;

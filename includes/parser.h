@@ -77,8 +77,6 @@ void	free_split(char **split);
 unsigned int    make_trgb(double t, int r, int g, int b);
 t_env   *set_get_env(int select, t_env *new);
 t_data  *set_get_data(int select, t_data *new);
-// void    make_env_data(char **split);
-void    set_amb_data(char **split, t_env *env);
 
 void    init_xyz(t_xyz *xyz);
 void    init_env(t_env *env);
@@ -93,7 +91,7 @@ void    make_env_data(char **split, t_env *env);
 void    set_amb_data(char **split, t_env *env);
 
 int     count_args(char **split);
-void    set_array(char *str, double *rgb, int select);
+void    set_array(char *str, double rgb[3], int select);
 void    check_array_num(double arr[3], int select);
 
 
