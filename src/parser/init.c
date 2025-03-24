@@ -1,13 +1,10 @@
 #include "parser.h"
 
-t_xyz    init_xyz(void)
+void    init_xyz(t_xyz *xyz)
 {
-    t_xyz   tmp;
-
-    tmp.x = 0.0;
-    tmp.y = 0.0;
-    tmp.z = 0.0;
-    return (tmp);
+    xyz->x = 0.0;
+    xyz->y = 0.0;
+    xyz->z = 0.0;
 }
 
 void    init_env(t_env *env)
@@ -16,18 +13,18 @@ void    init_env(t_env *env)
     env->flag[C] = 0;
     env->flag[L] = 0;
     env->amb_trgb = 0;
-    env->cam_xyz = init_xyz();
-    env->cam_vector = init_xyz();
+    init_xyz(&env->cam_xyz);
+    init_xyz(&env->cam_vector);
     env->cam_degree = 0.0;
-    env->light_xyz = init_xyz();
+    init_xyz(&env->light_xyz);
     env->light_trgb = 0;
 }
 
 void    init_data(t_data *data)
 {
     data->id = -1;
-    data->xyz = init_xyz();
-    data->vector = init_xyz();
+    init_xyz(&data->xyz);
+    init_xyz(&data->vector);
     data->rgb = 0;
     data->diameter = 0.0;
     data->height = 0.0;

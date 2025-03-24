@@ -82,11 +82,11 @@ void    minirt(void)
     exit(1);
 }
 
-bool check_argv(char *argv)
+bool check_filename(char *filename)
 {
-    while (*argv != '.')
-        argv++;
-    if (ft_memcmp(argv, ".rt", 4))
+    while (*filename != '.')
+        filename++;
+    if (ft_memcmp(filename, ".rt", 4))
         return (false);
     return (true);
 }
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     // t_env   *env;
     // t_data  *data;
 
-    if (argc != 2 || check_argv(argv[1]) == false)
+    if (argc != 2 || check_filename(argv[1]) == false)
         print_error_and_exit("main", "*.rt file required");
     // minirt();
     parser(argv[1]);

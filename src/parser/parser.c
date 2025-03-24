@@ -9,6 +9,7 @@ void    parser(char *filename)
     open_file(filename, &fd);
     env = (t_env *)safe_malloc(1, sizeof(t_env));
     init_env(env);
+    printf("env->light_xyz.x = %f\n", env->light_xyz.x);
     while (1)
     {
         line = NULL;
@@ -25,8 +26,6 @@ void    make_information(char *line, t_env *env)
     char    **split;
 
     split = ft_split(line, SPACE);
-    // for (int i = 0; split[i]; i++) //splitデータ確認
-    //     printf("%s\n", split[i]);
     if (!split[0])
     {
         free(line);
@@ -48,22 +47,9 @@ void    make_information(char *line, t_env *env)
         // make_obj_data(split);
     }
     else
-    {
         print_error_and_exit("parser", "couldn't find identifier");
-    }
     free_split(split);
     free(line);
-}
-
-int check_first_arg(char *str)
-{
-    if (!ft_memcmp(str, "A", 2) || !ft_memcmp(str, "C", 2)
-        || !ft_memcmp(str, "L", 2))
-        return (ENV);
-    if (!ft_memcmp(str, "sp", 3) || !ft_memcmp(str, "pl", 3)
-        || !ft_memcmp(str, "cy", 3))
-        return (OBJ);
-    return (FALSE);
 }
 
 void    set_amb_data(char **split, t_env *env)
@@ -80,7 +66,7 @@ void    set_amb_data(char **split, t_env *env)
     if (if_0_1(t) == false)
         print_error_and_exit("set_amb_data", "number is not between 0 and 1"); 
     set_array(split[2], rgb, RGB);
-    env->amb_trgb = make_trgb(t, rgb[0], rgb[1], rgb[2]);
+    env->amb_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
     return ;
 }
 
@@ -92,32 +78,6 @@ void    make_env_data(char **split, t_env *env)
     //     set_cam_data(split, env);
     // else
     //     set_light_data(split,env);
-}
-
-int count_args(char **split)
-{
-    int i;
-
-    i = 0;
-    while (split[i])
-        i++;
-    return (i);
-}
-
-void    check_array_num(double arr[3], int select)
-{
-    if (select == VECTOR)
-    {
-        if (arr[0] == 0 && arr[1] == 0 && arr[2] == 0)
-            print_error_and_exit("vector", "invalid vector(all nums are 0)");
-        if (if_0_1(arr[0]) * if_0_1(arr[1]) * if_0_1(arr[2]) == 0)
-            print_error_and_exit("vecort", "number is not between 0 and 1");
-    }
-    if (select == RGB)
-    {
-        if (if_0_255(arr[0]) * if_0_255(arr[1]) * if_0_255(arr[2]) == 0)
-           print_error_and_exit("vecort", "number is not between 0 and 255"); 
-    }
 }
 
 void    set_array(char *str, double rgb[3], int select)

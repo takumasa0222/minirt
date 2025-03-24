@@ -80,7 +80,7 @@ t_data  *set_get_data(int select, t_data *new);
 // void    make_env_data(char **split);
 void    set_amb_data(char **split, t_env *env);
 
-t_xyz   init_xyz(void);
+void    init_xyz(t_xyz *xyz);
 void    init_env(t_env *env);
 void    init_data(t_data *data);
 
@@ -94,6 +94,7 @@ void    set_amb_data(char **split, t_env *env);
 
 int     count_args(char **split);
 void    set_array(char *str, double *rgb, int select);
+void    check_array_num(double arr[3], int select);
 
 
 #endif
