@@ -9,9 +9,9 @@ t_env   *set_get_env(int select, t_env *new)
     return (tmp);
 }
 
-t_data  *set_get_data(int select, t_env *new)
+t_data  *set_get_data(int select, t_data *new)
 {
-    static t_env *tmp;
+    static t_data *tmp;
 
     if (select == SET)
         tmp = new;

@@ -15,6 +15,10 @@
 # define GET 1
 # define ENV 0
 # define OBJ 1
+# define VECTOR 0
+# define RATIO 1
+# define DEGREE 2
+# define RGB 3
 # define SPACE "\t\n\v\r\f "
 # define ARGS "0123456789.,ACLsplcy"
 
@@ -67,9 +71,29 @@ void    open_file(char *file_name, int *fd);
 double  ft_atof(char *nptr);
 void    *safe_malloc(size_t count, size_t size);
 int     check_first_arg(char *str);
-void    make_information(char *line);
+void    make_information(char *line, t_env *env);
 void    parser(char *filename);
 void	free_split(char **split);
 unsigned int    make_trgb(double t, int r, int g, int b);
+t_env   *set_get_env(int select, t_env *new);
+t_data  *set_get_data(int select, t_data *new);
+// void    make_env_data(char **split);
+void    set_amb_data(char **split, t_env *env);
+
+t_xyz   init_xyz(void);
+void    init_env(t_env *env);
+void    init_data(t_data *data);
+
+bool    if_minus1_1(double num);
+bool    if_0_1(double num);
+bool    if_0_180(double num);
+bool    if_0_255(double num);
+
+void    make_env_data(char **split, t_env *env);
+void    set_amb_data(char **split, t_env *env);
+
+int     count_args(char **split);
+void    set_array(char *str, double *rgb, int select);
+
 
 #endif

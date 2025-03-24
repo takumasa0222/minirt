@@ -45,7 +45,8 @@ char    *calc_decimal(double *decimal, char *nptr, double integer)
     int         power;
 
     if (*(nptr - 1) == '.' && !*nptr)
-        return (nptr);    
+        return (*decimal = 0, nptr);
+        // exit((printf("Error: invalid number\n"), 1));        
     num = 0;
     power = 0;
     while (ft_isdigit(*nptr))
@@ -53,8 +54,9 @@ char    *calc_decimal(double *decimal, char *nptr, double integer)
         if (num > DBL_MAX / 10)
             break ;
         num = num * 10 + *nptr++ - '0';
-        if (integer + ((double)num / pow(10.0, power)) < DBL_MIN)
+        if (num > 0 && (integer + ((double)num / pow(10.0, power)) < DBL_MIN))
         {
+            printf("here\n");
             num = 0;  
             break ;
         }
@@ -90,8 +92,8 @@ double  ft_atof(char *nptr)
 // {
 //     printf("%s: ", "24.");
 //     printf("%.10f\n", ft_atof("24."));   // 24.42    
-//     printf("%s: ", "-0.123456");
-//     printf("%f\n", ft_atof("-0.123456")); // -0.1234
+//     printf("%s: ", "0.0123456");
+//     printf("%f\n", ft_atof("0.0123456")); // -0.1234
 //     printf("%s: ", "100.05");
 //     printf("%f\n", ft_atof("100.05"));  // 100.05
 //     printf("%s: ", "10");

@@ -8,8 +8,11 @@ SRCS	= src/main.c \
 		  src/parser/safe_function.c \
 		  src/parser/parser.c \
 		  src/parser/free.c \
-		  src/parser/trgb.c
-		#   src/parser/setter_getter.c
+		  src/parser/trgb.c \
+		  src/parser/setter_getter.c \
+		  src/parser/init.c\
+		  src/parser/check_range.c \
+		  src/parser/ft_atof.c
 OBJS	= $(SRCS:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a

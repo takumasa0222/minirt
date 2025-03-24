@@ -1,6 +1,6 @@
 #include "parser.h"
 
-void    practice(void)
+void    minirt(void)
 {
     t_env   *env;
     t_data  *data;
@@ -82,18 +82,26 @@ void    practice(void)
     exit(1);
 }
 
+bool check_argv(char *argv)
+{
+    while (*argv != '.')
+        argv++;
+    if (ft_memcmp(argv, ".rt", 4))
+        return (false);
+    return (true);
+}
+
 int main(int argc, char **argv)
 {
     // t_env   *env;
     // t_data  *data;
 
-    if (argc != 2)
-        print_error_and_exit("main", "there should be one argument");
-    // practice();
-    // env = NULL;
-    // data = NULL;
+    if (argc != 2 || check_argv(argv[1]) == false)
+        print_error_and_exit("main", "*.rt file required");
+    // minirt();
     parser(argv[1]);
-    //minirt();
+    // env = set_get_env(GET, NULL);
+    // data = set_get_data(GET, NULL);
     // free(env);
     // free_data(data);
     return (0);
