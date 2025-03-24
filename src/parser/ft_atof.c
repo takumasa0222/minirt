@@ -45,7 +45,7 @@ char    *calc_decimal(double *decimal, char *nptr, double integer)
     int         power;
 
     if (*(nptr - 1) == '.' && !*nptr)
-        exit((printf("Error: invalid number\n"), 1));        
+        return (nptr);        
     num = 0;
     power = 0;
     while (ft_isdigit(*nptr))
@@ -88,10 +88,10 @@ double  ft_atof(char *nptr)
 
 // int main(void)
 // {
-//     printf("%s: ", "24.42424242");
-//     printf("%.10f\n", ft_atof("24.42424242"));   // 24.42    
-//     printf("%s: ", "-0.123456");
-//     printf("%f\n", ft_atof("-0.123456")); // -0.1234
+//     printf("%s: ", "24.");
+//     printf("%.10f\n", ft_atof("24."));   // 24.42    
+//     printf("%s: ", "-0.0123456");
+//     printf("%f\n", ft_atof("-0.0123456")); // -0.1234
 //     printf("%s: ", "100.05");
 //     printf("%f\n", ft_atof("100.05"));  // 100.05
 //     printf("%s: ", "10");
