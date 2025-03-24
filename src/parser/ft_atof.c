@@ -1,21 +1,21 @@
-// #include "parser.h"
+#include "parser.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <unistd.h>
-#include <math.h>
-#include <float.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <stdbool.h>
+// #include <unistd.h>
+// #include <math.h>
+// #include <float.h>
 
 bool    is_space(char c)
 {
     return ((c >= 9 && c <= 13) || c == ' ');
 }
 
-static bool    ft_isdigit(char c)
-{
-    return (c >= '0' && c <= '9');
-}
+// static bool    ft_isdigit(char c)
+// {
+//     return (c >= '0' && c <= '9');
+// }
 
 char    *atof_init(char *nptr, double *sign)
 {
@@ -45,8 +45,7 @@ char    *calc_decimal(double *decimal, char *nptr, double integer)
     int         power;
 
     if (*(nptr - 1) == '.' && !*nptr)
-        return (*decimal = 0, nptr);
-        // exit((printf("Error: invalid number\n"), 1));        
+        return (nptr);    
     num = 0;
     power = 0;
     while (ft_isdigit(*nptr))
@@ -87,18 +86,18 @@ double  ft_atof(char *nptr)
         return (sign * (integer + decimal));
 }
 
-int main(void)
-{
-    printf("%s: ", "24.");
-    printf("%.10f\n", ft_atof("24."));   // 24.42    
-    printf("%s: ", "-0.123456");
-    printf("%f\n", ft_atof("-0.123456")); // -0.1234
-    printf("%s: ", "100.05");
-    printf("%f\n", ft_atof("100.05"));  // 100.05
-    printf("%s: ", "10");
-    printf("%f\n", ft_atof("10"));  // 
-    printf("%s: ", "-0.123a56");
-    printf("%f\n", ft_atof("-0.123a56")); // 
-    printf("%s: ", "24.");
-    printf("%f\n", ft_atof("24."));   // 
-}
+// int main(void)
+// {
+//     printf("%s: ", "24.");
+//     printf("%.10f\n", ft_atof("24."));   // 24.42    
+//     printf("%s: ", "-0.123456");
+//     printf("%f\n", ft_atof("-0.123456")); // -0.1234
+//     printf("%s: ", "100.05");
+//     printf("%f\n", ft_atof("100.05"));  // 100.05
+//     printf("%s: ", "10");
+//     printf("%f\n", ft_atof("10"));  // 
+//     printf("%s: ", "-0.123a56");
+//     printf("%f\n", ft_atof("-0.123a56")); // 
+//     printf("%s: ", "24.");
+//     printf("%f\n", ft_atof("24."));   // 
+// }
