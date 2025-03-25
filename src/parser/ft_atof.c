@@ -45,8 +45,7 @@ char    *calc_decimal(double *decimal, char *nptr, double integer)
     int         power;
 
     if (*(nptr - 1) == '.' && !*nptr)
-        return (*decimal = 0, nptr);
-        // exit((printf("Error: invalid number\n"), 1));        
+        return (nptr); 
     num = 0;
     power = 0;
     while (ft_isdigit(*nptr))
@@ -56,7 +55,6 @@ char    *calc_decimal(double *decimal, char *nptr, double integer)
         num = num * 10 + *nptr++ - '0';
         if (num > 0 && (integer + ((double)num / pow(10.0, power)) < DBL_MIN))
         {
-            printf("here\n");
             num = 0;  
             break ;
         }
