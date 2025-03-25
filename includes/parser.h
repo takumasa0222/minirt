@@ -92,7 +92,7 @@ void    make_env_data(char **split, t_env *env);
 void    set_amb_data(char **split, t_env *env);
 
 int     count_split(char **split);
-void    set_array(char *str, double rgb[3], int select);
+void    set_array(char *str, double arr[3], int select);
 void    check_array_num(double arr[3], int select);
 
 

@@ -60,13 +60,9 @@ void    make_information(char *line, t_env *env)
     }
     if (check_first_element(split[0]) == ENV)
     {
-        // printf("make env\n\n");
         make_env_data(split, env);
-        printf("\n** after read first line **\n");
+        printf("\n** after read line **\n");
         print_env_data();
-        // printf("env->flag[A] = %d\n", env->flag[A]);
-        // printf("env->amb_trgb = %X\n", env->amb_trgb);
-        exit(1);
     }
     else if (check_first_element(split[0]) == OBJ)
     {
@@ -85,30 +81,79 @@ void    set_amb_data(char **split, t_env *env)
     double  rgb[3];
 
     if (env->flag[A] == 1)
-        print_error_and_exit("set_amb_data", "data already existed");
+        print_error_and_exit("set_amb_data", "A data already existed");
     env->flag[A] = 1;
     if (count_split(split) != 3)
         print_error_and_exit("set_amb_data", "number of arguments is not 3");
     t = ft_atof(split[1]);
     if (is_0_1(t) == false)
         print_error_and_exit("set_amb_data",
-            "second element is not between 0 and 1"); 
+            "2nd element is not between 0 and 1"); 
     set_array(split[2], rgb, RGB);
     env->amb_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
-    return ;
+}
+
+void    set_struct_xyz(t_xyz *xyz, double arr[3])
+{
+    xyz->x = arr[0];
+    xyz->y = arr[1];
+    xyz->z = arr[2];
+}
+
+void    set_cam_data(char **split, t_env *env)
+{
+    double  xyz[3];
+    double  vector[3];
+    double  degree;
+
+    if (env->flag[C] == 1)
+        print_error_and_exit("set_cam_data", "C data already existed");
+    env->flag[C] = 1;
+    if (count_split(split) != 4)
+        print_error_and_exit("set_cam_data", "number of arguments is not 4");
+    set_array(split[1], xyz, OTHER);
+    set_struct_xyz(&env->cam_xyz, xyz);
+    set_array(split[2], vector, VECTOR);
+    set_struct_xyz(&env->cam_vector, vector);
+    degree = ft_atof(split[3]);
+    if (is_0_180(degree) == false)
+        print_error_and_exit("set_cam_data",
+            "4th element is not between 0 and 180");
+    env->cam_degree = degree;
+}
+
+void    set_light_data(char **split, t_env *env)
+{
+    double  xyz[3];
+    double  t;
+    double  rgb[3];
+
+    if (env->flag[L] == 1)
+        print_error_and_exit("set_light_data", "L data already existed");
+    env->flag[L] = 1;
+    if (count_split(split) != 4)
+        print_error_and_exit("set_light_data", "number of arguments is not 4");
+    set_array(split[1], xyz, OTHER);
+    set_struct_xyz(&env->light_xyz, xyz);
+    t = ft_atof(split[2]);
+    if (is_0_1(t) == false)
+        print_error_and_exit("set_light_data",
+            "3rd element is not between 0 and 1"); 
+    set_array(split[3], rgb, RGB);
+    env->light_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
 }
 
 void    make_env_data(char **split, t_env *env)
 {
     if (ft_memcmp(split[0], "A", 2) == 0)
         set_amb_data(split, env);
-    // else if (ft_memcmp(split[0], "C", 2) == 0)
-    //     set_cam_data(split, env);
-    // else
-    //     set_light_data(split,env);
+    else if (ft_memcmp(split[0], "C", 2) == 0)
+        set_cam_data(split, env);
+    else
+        set_light_data(split,env);
 }
 
-void    set_array(char *str, double rgb[3], int select)
+void    set_array(char *str, double arr[3], int select)
 {
     char    **number;
     int     i;
@@ -126,9 +171,10 @@ void    set_array(char *str, double rgb[3], int select)
     number = ft_split(str, ",");
     if (count_split(number) != 3)
         print_error_and_exit("set array", "argument count should be 3");
-    rgb[0] = ft_atof(number[0]);
-    rgb[1] = ft_atof(number[1]);
-    rgb[2] = ft_atof(number[2]);
+    arr[0] = ft_atof(number[0]);
+    arr[1] = ft_atof(number[1]);
+    arr[2] = ft_atof(number[2]);
     free_split(number);
-    check_array_num(rgb, select);
+    if (select == VECTOR || select == RGB)
+        check_array_num(arr, select);
 }

@@ -12,10 +12,10 @@ bool    is_0_1(double num)
 
 bool    is_0_180(double num)
 {
-    return (num >= 0 && num <= 180);
+    return (num >= 0.0 && num <= 180.0);
 }
 
 bool    is_0_255(double num)
 {
-    return (num >= 0 && num <= 255);
+    return (num >= 0.0 && num <= 255.0);
 }
