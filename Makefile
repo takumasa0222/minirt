@@ -13,7 +13,8 @@ SRCS	= src/main.c \
 		  src/parser/init.c\
 		  src/parser/check_range.c \
 		  src/parser/check_element.c \
-		  src/parser/ft_atof.c
+		  src/parser/ft_atof.c \
+		  src/parser/make_env_data.c
 OBJS	= $(SRCS:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a

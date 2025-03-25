@@ -72,7 +72,7 @@ void    open_file(char *file_name, int *fd);
 double  ft_atof(char *nptr);
 void    *safe_malloc(size_t count, size_t size);
 int     check_first_element(char *str);
-void    make_information(char *line, t_env *env);
+void    make_information(char *line);
 void    parser(char *filename);
 void	free_split(char **split);
 unsigned int    make_trgb(double t, int r, int g, int b);
@@ -88,9 +88,12 @@ bool    is_0_1(double num);
 bool    is_0_180(double num);
 bool    is_0_255(double num);
 
-void    make_env_data(char **split, t_env *env);
+void    make_env_data(char **split);
 void    set_amb_data(char **split, t_env *env);
+void    set_cam_data(char **split, t_env *env);
+void    set_light_data(char **split, t_env *env);
 
+void    set_struct_xyz(t_xyz *xyz, double arr[3]);
 int     count_split(char **split);
 void    set_array(char *str, double arr[3], int select);
 void    check_array_num(double arr[3], int select);

@@ -28,11 +28,14 @@ void    parser(char *filename)
     int     fd;
     char    *line;
     t_env   *env;
+    t_data  *data;
 
     open_file(filename, &fd);
     env = (t_env *)safe_malloc(1, sizeof(t_env));
     init_env(env);
     set_get_env(SET, env);
+    data = NULL;
+    set_get_data(SET, data);
     printf("** after init env **\n");
     print_env_data();
     while (1)
@@ -40,13 +43,13 @@ void    parser(char *filename)
         line = NULL;
         line = get_next_line(fd);
         if (line)
-            make_information(line, env);
+            make_information(line);
         else
             break ;
     }
 }
 
-void    make_information(char *line, t_env *env)
+void    make_information(char *line)
 {
     char    **split;
 
@@ -60,7 +63,7 @@ void    make_information(char *line, t_env *env)
     }
     if (check_first_element(split[0]) == ENV)
     {
-        make_env_data(split, env);
+        make_env_data(split);
         printf("\n** after read line **\n");
         print_env_data();
     }
@@ -75,82 +78,11 @@ void    make_information(char *line, t_env *env)
     free(line);
 }
 
-void    set_amb_data(char **split, t_env *env)
-{
-    double  t;
-    double  rgb[3];
-
-    if (env->flag[A] == 1)
-        print_error_and_exit("set_amb_data", "A data already existed");
-    env->flag[A] = 1;
-    if (count_split(split) != 3)
-        print_error_and_exit("set_amb_data", "number of arguments is not 3");
-    t = ft_atof(split[1]);
-    if (is_0_1(t) == false)
-        print_error_and_exit("set_amb_data",
-            "2nd element is not between 0 and 1"); 
-    set_array(split[2], rgb, RGB);
-    env->amb_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
-}
-
 void    set_struct_xyz(t_xyz *xyz, double arr[3])
 {
     xyz->x = arr[0];
     xyz->y = arr[1];
     xyz->z = arr[2];
-}
-
-void    set_cam_data(char **split, t_env *env)
-{
-    double  xyz[3];
-    double  vector[3];
-    double  degree;
-
-    if (env->flag[C] == 1)
-        print_error_and_exit("set_cam_data", "C data already existed");
-    env->flag[C] = 1;
-    if (count_split(split) != 4)
-        print_error_and_exit("set_cam_data", "number of arguments is not 4");
-    set_array(split[1], xyz, OTHER);
-    set_struct_xyz(&env->cam_xyz, xyz);
-    set_array(split[2], vector, VECTOR);
-    set_struct_xyz(&env->cam_vector, vector);
-    degree = ft_atof(split[3]);
-    if (is_0_180(degree) == false)
-        print_error_and_exit("set_cam_data",
-            "4th element is not between 0 and 180");
-    env->cam_degree = degree;
-}
-
-void    set_light_data(char **split, t_env *env)
-{
-    double  xyz[3];
-    double  t;
-    double  rgb[3];
-
-    if (env->flag[L] == 1)
-        print_error_and_exit("set_light_data", "L data already existed");
-    env->flag[L] = 1;
-    if (count_split(split) != 4)
-        print_error_and_exit("set_light_data", "number of arguments is not 4");
-    set_array(split[1], xyz, OTHER);
-    set_struct_xyz(&env->light_xyz, xyz);
-    t = ft_atof(split[2]);
-    if (is_0_1(t) == false)
-        print_error_and_exit("set_light_data",
-            "3rd element is not between 0 and 1"); 
-    set_array(split[3], rgb, RGB);
-    env->light_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
-}
-
-void    make_env_data(char **split, t_env *env)
-{
-    if (ft_memcmp(split[0], "A", 2) == 0)
-        set_amb_data(split, env);
-    else if (ft_memcmp(split[0], "C", 2) == 0)
-        set_cam_data(split, env);
-    else
-        set_light_data(split,env);
 }
 
 void    set_array(char *str, double arr[3], int select)
