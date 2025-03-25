@@ -58,18 +58,8 @@ void    make_information(char *line)
 void    set_array(char *str, double arr[3], int select)
 {
     char    **number;
-    int     i;
-    int     count;
 
-    i = -1;
-    count = 0;
-    while (str[++i])
-    {
-        if (str[i] == ',')
-            count++;
-    }
-    if (count > 2)
-        print_error_and_exit("set array", "too many \',\'"); 
+    check_comma(str);
     number = ft_split(str, ",");
     if (count_split(number) != 3)
         print_error_and_exit("set array", "argument count should be 3");

@@ -62,6 +62,7 @@ typedef struct s_data
 int             check_first_element(char *str);
 int             count_split(char **split);
 void            check_array_num(double arr[3], int select);
+void            check_comma(char *str);
 
 //check_range.c
 bool            is_minus1_1(double num);

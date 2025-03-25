@@ -40,3 +40,21 @@ void    check_array_num(double arr[3], int select)
     }
 }
 
+void check_comma(char *str)
+{
+    int i;
+    int count;
+
+    i = -1;
+    count = 0;
+    while (str[++i])
+    {
+        if (str[i] == ',')
+            count++;
+    }
+    if (count > 2)
+        print_error_and_exit("set array", "too many \',\'");
+    else if (count < 2)
+        print_error_and_exit("set array", "too few \',\'"); 
+}
+
