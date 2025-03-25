@@ -1,5 +1,28 @@
 #include "parser.h"
 
+
+void    print_env_data()
+{
+    t_env   *env;
+
+    env = set_get_env(GET, NULL);
+    printf("flag[A] = %d\n", env->flag[A]);
+    printf("flag[C] = %d\n", env->flag[C]);
+    printf("flag[L] = %d\n", env->flag[L]);
+    printf("amb_trgb = %X\n", env->amb_trgb);
+    printf("cam_xyz.x = %0.1f\n", env->cam_xyz.x);
+    printf("cam_xyz.y = %0.1f\n", env->cam_xyz.y);
+    printf("cam_xyz.z = %0.1f\n", env->cam_xyz.z);
+    printf("cam_vector.x = %0.1f\n", env->cam_vector.x);
+    printf("cam_vector.y = %0.1f\n", env->cam_vector.y);
+    printf("cam_vector.z = %0.1f\n", env->cam_vector.z);
+    printf("cam_degree = %0.1f\n", env->cam_degree);
+    printf("light_xyz.x = %0.1f\n", env->light_xyz.x);
+    printf("light_xyz.y = %0.1f\n", env->light_xyz.y);
+    printf("light_xyz.z = %0.1f\n", env->light_xyz.z);
+    printf("light_trgb = %X\n", env->light_trgb);
+}
+
 void    parser(char *filename)
 {
     int     fd;
@@ -9,6 +32,9 @@ void    parser(char *filename)
     open_file(filename, &fd);
     env = (t_env *)safe_malloc(1, sizeof(t_env));
     init_env(env);
+    set_get_env(SET, env);
+    printf("** after init env **\n");
+    print_env_data();
     while (1)
     {
         line = NULL;
@@ -34,15 +60,17 @@ void    make_information(char *line, t_env *env)
     }
     if (check_first_element(split[0]) == ENV)
     {
-        printf("make env\n\n");
+        // printf("make env\n\n");
         make_env_data(split, env);
+        printf("\n** after read first line **\n");
+        print_env_data();
         // printf("env->flag[A] = %d\n", env->flag[A]);
         // printf("env->amb_trgb = %X\n", env->amb_trgb);
-        // exit(1);
+        exit(1);
     }
     else if (check_first_element(split[0]) == OBJ)
     {
-        printf("make obj\n\n");
+        // printf("make obj\n\n");
         // make_obj_data(split);
     }
     else
