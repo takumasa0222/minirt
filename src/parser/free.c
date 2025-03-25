@@ -13,3 +13,15 @@ void	free_split(char **split)
 	if (split)
 		free(split);
 }
+
+void	free_data(t_data *data)
+{
+	if (data)
+	{
+		while (data)
+		{
+			free(data);
+			data = data->next;
+		}
+	}
+}

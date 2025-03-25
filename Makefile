@@ -3,18 +3,17 @@ CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 FLAGS	+= -fsanitize=thread -g
 SRCS	= src/main.c \
-		  src/parser/open_file.c \
-		  src/parser/error_msg.c \
-		  src/parser/safe_function.c \
-		  src/parser/parser.c \
-		  src/parser/free.c \
-		  src/parser/trgb.c \
-		  src/parser/setter_getter.c \
-		  src/parser/init.c\
-		  src/parser/check_range.c \
 		  src/parser/check_element.c \
+		  src/parser/check_range.c \
+		  src/parser/free.c \
 		  src/parser/ft_atof.c \
-		  src/parser/make_env_data.c
+		  src/parser/init.c\
+		  src/parser/make_env_data.c \
+		  src/parser/make_obj_data.c \
+		  src/parser/parser.c \
+		  src/parser/print_function.c \
+		  src/parser/setter_getter.c \
+		  src/parser/utils.c 
 OBJS	= $(SRCS:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a
