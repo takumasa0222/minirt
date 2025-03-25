@@ -12,7 +12,7 @@ SRCS	= src/main.c \
 		  src/parser/setter_getter.c \
 		  src/parser/init.c\
 		  src/parser/check_range.c \
-		  src/parser/check_args.c \
+		  src/parser/check_element.c \
 		  src/parser/ft_atof.c
 OBJS	= $(SRCS:.c=.o)
 HEADER	= ./includes

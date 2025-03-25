@@ -32,15 +32,15 @@ void    make_information(char *line, t_env *env)
         free(split);
         return ;
     }
-    if (check_first_arg(split[0]) == ENV)
+    if (check_first_element(split[0]) == ENV)
     {
-        // printf("make env\n\n");
+        printf("make env\n\n");
         make_env_data(split, env);
-        printf("env->flag[A] = %d\n", env->flag[A]);
-        printf("env->amb_trgb = %X\n", env->amb_trgb);
-        exit(1);
+        // printf("env->flag[A] = %d\n", env->flag[A]);
+        // printf("env->amb_trgb = %X\n", env->amb_trgb);
+        // exit(1);
     }
-    else if (check_first_arg(split[0]) == OBJ)
+    else if (check_first_element(split[0]) == OBJ)
     {
         printf("make obj\n\n");
         // make_obj_data(split);
@@ -59,11 +59,12 @@ void    set_amb_data(char **split, t_env *env)
     if (env->flag[A] == 1)
         print_error_and_exit("set_amb_data", "data already existed");
     env->flag[A] = 1;
-    if (count_args(split) != 3)
+    if (count_split(split) != 3)
         print_error_and_exit("set_amb_data", "number of arguments is not 3");
     t = ft_atof(split[1]);
-    if (if_0_1(t) == false)
-        print_error_and_exit("set_amb_data", "number is not between 0 and 1"); 
+    if (is_0_1(t) == false)
+        print_error_and_exit("set_amb_data",
+            "second element is not between 0 and 1"); 
     set_array(split[2], rgb, RGB);
     env->amb_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
     return ;
@@ -82,9 +83,20 @@ void    make_env_data(char **split, t_env *env)
 void    set_array(char *str, double rgb[3], int select)
 {
     char    **number;
+    int     i;
+    int     count;
 
+    i = -1;
+    count = 0;
+    while (str[++i])
+    {
+        if (str[i] == ',')
+            count++;
+    }
+    if (count > 2)
+        print_error_and_exit("set array", "too many \',\'"); 
     number = ft_split(str, ",");
-    if (count_args(number) != 3)
+    if (count_split(number) != 3)
         print_error_and_exit("set array", "argument count should be 3");
     rgb[0] = ft_atof(number[0]);
     rgb[1] = ft_atof(number[1]);

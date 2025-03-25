@@ -15,6 +15,7 @@
 # define GET 1
 # define ENV 0
 # define OBJ 1
+# define OTHER 2
 # define VECTOR 0
 # define RATIO 1
 # define DEGREE 2
@@ -70,7 +71,7 @@ void    print_error_and_exit(char *func_name, char *message);
 void    open_file(char *file_name, int *fd);
 double  ft_atof(char *nptr);
 void    *safe_malloc(size_t count, size_t size);
-int     check_first_arg(char *str);
+int     check_first_element(char *str);
 void    make_information(char *line, t_env *env);
 void    parser(char *filename);
 void	free_split(char **split);
@@ -82,15 +83,15 @@ void    init_xyz(t_xyz *xyz);
 void    init_env(t_env *env);
 void    init_data(t_data *data);
 
-bool    if_minus1_1(double num);
-bool    if_0_1(double num);
-bool    if_0_180(double num);
-bool    if_0_255(double num);
+bool    is_minus1_1(double num);
+bool    is_0_1(double num);
+bool    is_0_180(double num);
+bool    is_0_255(double num);
 
 void    make_env_data(char **split, t_env *env);
 void    set_amb_data(char **split, t_env *env);
 
-int     count_args(char **split);
+int     count_split(char **split);
 void    set_array(char *str, double rgb[3], int select);
 void    check_array_num(double arr[3], int select);
 
