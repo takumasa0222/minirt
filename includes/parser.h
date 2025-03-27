@@ -15,6 +15,7 @@
 # define GET 1
 # define ENV 0
 # define OBJ 1
+
 # define OTHER 2
 # define VECTOR 3
 # define RGB 4
@@ -28,6 +29,7 @@ enum {
     SP,
     CY
 };
+
 
 typedef struct s_xyx
 {
@@ -114,5 +116,6 @@ t_data          *set_get_data(int select, t_data *new);
 void            open_file(char *file_name, int *fd);
 void            *safe_malloc(size_t count, size_t size);
 unsigned int    make_trgb(double t, int r, int g, int b);
+
 
 #endif
