@@ -1,4 +1,6 @@
 #include "parser.h"
+#include "ui.h"
+#include "raytracing.h"
 
 void    minirt(void)
 {
@@ -103,8 +105,9 @@ int main(int argc, char **argv)
     data = set_get_data(GET, NULL);
     // minirt(env, data);
     // minirt();
+	init_window(data, env);
     free(env);
-    free_data(data);
+    //free_data(data);
     printf("end\n");
     return (0);
 }

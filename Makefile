@@ -13,17 +13,20 @@ SRCS	= src/main.c \
 		  src/parser/parser.c \
 		  src/parser/print_function.c \
 		  src/parser/setter_getter.c \
-		  src/parser/utils.c 
+		  src/parser/utils.c \
+		  src/ui/init_window.c \
+		  src/ui/close_handler.c
 OBJS	= $(SRCS:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a
 
 %.o: %.c
-	$(CC) $(FLAGS) -I$(HEADER) -c $< -o $@
+	$(CC) $(FLAGS) -I$(HEADER) -Imlx_linux -O3 -c $< -o $@
 
 $(NAME): $(OBJS)
+	@make -C ./mlx_linux
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(FLAGS) $(OBJS) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 
 all: $(NAME)
 
