@@ -14,6 +14,7 @@ SRCS	= src/main.c \
 		  src/parser/print_function.c \
 		  src/parser/setter_getter.c \
 		  src/parser/utils.c 
+
 OBJS	= $(SRCS:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a
