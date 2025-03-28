@@ -16,12 +16,15 @@ void	free_split(char **split)
 
 void	free_data(t_data *data)
 {
+	t_data	*tmp;
+
 	if (data)
 	{
 		while (data)
 		{
+			tmp = data->next;
 			free(data);
-			data = data->next;
+			data = tmp;
 		}
 	}
 }

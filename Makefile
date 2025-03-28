@@ -24,7 +24,7 @@ LIBFT	= ./src/libft/libft.a
 
 $(NAME): $(OBJS)
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(FLAGS) $(OBJS) $(LIBFT) -lm -o $(NAME)
 
 all: $(NAME)
 
