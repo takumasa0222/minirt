@@ -2,9 +2,9 @@ NAME	= minirt
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 FLAGS	+= -fsanitize=thread -g
-SRC_M   = src/main.c
-SRC_B   = src/main_bonus.c
-SRCS	= src/parser/check_element.c \
+SRCS_M  = src/main.c
+SRCS_B  = src/main_bonus.c
+SRCS_P	= src/parser/check_element.c \
 		  src/parser/check_range.c \
 		  src/parser/free.c \
 		  src/parser/ft_atof.c \
@@ -17,28 +17,28 @@ SRCS	= src/parser/check_element.c \
 		  src/parser/setter_getter.c \
 		  src/parser/utils.c 
 
-OBJ_M   = $(SRC_M:.c=.o)
-OBJ_B   = $(SRC_B:.c=.o)
-OBJS	= $(SRCS:.c=.o)
+OBJS_M  = $(SRCS_M:.c=.o)
+OBJS_B  = $(SRCS_B:.c=.o)
+OBJS_P	= $(SRCS_P:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a
 
 %.o: %.c
 	$(CC) $(FLAGS) -I$(HEADER) -c $< -o $@
 
-$(NAME): $(OBJ_M) $(OBJS)
+$(NAME): $(OBJS_M) $(OBJS_P)
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJ_M) $(OBJS) $(LIBFT) -lm -o $(NAME)
+	$(CC) $(FLAGS) $(OBJS_M) $(OBJS_P) $(LIBFT) -lm -o $(NAME)
 
 all: $(NAME)
 
-bonus: $(OBJ_B) $(OBJS)
+bonus: $(OBJS_B) $(OBJS_P)
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJ_B) $(OBJS) $(LIBFT) -lm -o $(NAME)
+	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(LIBFT) -lm -o $(NAME)
 
 clean:
 	make fclean -C ./src/libft
-	rm -f $(OBJ_M) $(OBJ_B) $(OBJS)
+	rm -f $(OBJS_M) $(OBJS_B) $(OBJS_P)
 
 fclean: clean
 	rm -f $(NAME)
