@@ -9,6 +9,7 @@ SRCS	= src/main.c \
 		  src/parser/ft_atof.c \
 		  src/parser/init.c\
 		  src/parser/make_env_data.c \
+		  src/parser/make_lit_data.c \
 		  src/parser/make_obj_data.c \
 		  src/parser/parser.c \
 		  src/parser/print_function.c \

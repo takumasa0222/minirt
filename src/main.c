@@ -3,11 +3,14 @@
 void    minirt(void)
 {
     t_env   *env;
-    t_data  *data;
-    t_data  *head;
+    t_lit   *lit = NULL;
+    t_obj  *data;
+    t_obj  *head;
 
     //A,C,L data
+    env = NULL;
     env = (t_env *)malloc(sizeof(t_env));
+    lit = (t_lit *)malloc(sizeof(t_lit));
     env->amb_trgb = make_trgb(0.2, 255, 255, 255);
     env->cam_xyz.x = -50;
     env->cam_xyz.y = 0;
@@ -16,13 +19,13 @@ void    minirt(void)
     env->cam_vector.y = 0;
     env->cam_vector.z = 1;
     env->cam_degree = 70;
-    env->light_trgb = make_trgb(0.7, 255, 255, 255);
-    env->light_xyz.x = -40;
-    env->light_xyz.y = 0;
-    env->light_xyz.z = 20;
+    lit->trgb = make_trgb(0.7, 255, 255, 255);
+    lit->xyz.x = -40;
+    lit->xyz.y = 0;
+    lit->xyz.z = 20;
 
     //pl data
-    data = (t_data *)malloc(sizeof(t_data));
+    data = (t_obj *)malloc(sizeof(t_obj));
     head = data;
     data->id = PL;
     data->xyz.x = 0;
@@ -35,8 +38,8 @@ void    minirt(void)
     data->next = NULL;
 
     //sp data
-    t_data *new1;
-    new1 = (t_data *)malloc(sizeof(t_data));
+    t_obj *new1;
+    new1 = (t_obj *)malloc(sizeof(t_obj));
     head->next = new1;
     new1->id = SP;
     new1->xyz.x = 0;
@@ -47,8 +50,8 @@ void    minirt(void)
     new1->next = NULL;
 
     //cy data;
-    t_data *new2;
-    new2 = (t_data *)malloc(sizeof(t_data));
+    t_obj *new2;
+    new2 = (t_obj *)malloc(sizeof(t_obj));
     head->next->next = new2;
     new2->id = CY;
     new2->xyz.x = 50.0;
@@ -64,8 +67,8 @@ void    minirt(void)
     printf("\nA:TRGB  = %X\n", env->amb_trgb);
     printf("C:xyz   = (%0.1f, %0.1f, %0.1f)\n", env->cam_xyz.x, env->cam_xyz.y, env->cam_xyz.z);
     printf(" :vector= (%0.1f, %0.1f, %0.1f)\n", env->cam_vector.x, env->cam_vector.y, env->cam_vector.z);
-    printf("L:xyz   = (%0.1f, %0.1f, %0.1f)\n", env->light_xyz.x, env->light_xyz.y, env->light_xyz.z);
-    printf(" :TRGB  = %X\n", env->light_trgb);
+    printf("L:xyz   = (%0.1f, %0.1f, %0.1f)\n", lit->xyz.x, lit->xyz.y, lit->xyz.z);
+    printf(" :TRGB  = %X\n", lit->trgb);
     printf("\n3 = pl, 4 = sp, 5 = cy\n");
     while (data)
     {
@@ -94,17 +97,20 @@ bool check_filename(char *filename)
 int main(int argc, char **argv)
 {
     t_env   *env;
-    t_data  *data;
+    t_lit   *lit;
+    t_obj   *obj;
 
     if (argc != 2 || check_filename(argv[1]) == false)
         print_error_and_exit("main", "*.rt file required");
     parser(argv[1]);
     env = set_get_env(GET, NULL);
-    data = set_get_data(GET, NULL);
+    lit = set_get_lit(GET, NULL);
+    obj = set_get_obj(GET, NULL);
     // minirt(env, data);
     // minirt();
     free(env);
-    free_data(data);
+    free_lit(lit);
+    free_obj(obj);
     printf("end\n");
     return (0);
 }

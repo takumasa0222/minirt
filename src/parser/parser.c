@@ -5,14 +5,17 @@ void    parser(char *filename)
     int     fd;
     char    *line;
     t_env   *env;
-    t_data  *data;
+    t_lit   *lit;
+    t_obj   *obj;
 
     open_file(filename, &fd);
     env = (t_env *)safe_malloc(1, sizeof(t_env));
     init_env(env);
     set_get_env(SET, env);
-    data = NULL;
-    set_get_data(SET, data);
+    lit = NULL;
+    set_get_lit(SET, lit);
+    obj = NULL;
+    set_get_obj(SET, obj);
     printf("** after init env **\n");
     print_env_data();
     while (1)
@@ -25,6 +28,7 @@ void    parser(char *filename)
             break ;
         free(line);
     }
+    print_lit_data();
     print_obj_data();
 }
 
@@ -45,6 +49,8 @@ void    make_information(char *line)
         printf("\n** after read line **\n");
         print_env_data();
     }
+    else if (check_first_element(split[0]) == LIT)
+        make_lit_data(split);
     else if (check_first_element(split[0]) == OBJ)
     {
         // printf("make obj\n\n");
