@@ -1,4 +1,5 @@
-NAME	= minirt
+NAME	= miniRT
+NAME_B  = miniRT_bonus
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 FLAGS	+= -fsanitize=thread -g
@@ -32,16 +33,18 @@ $(NAME): $(OBJS_M) $(OBJS_P)
 
 all: $(NAME)
 
-bonus: $(OBJS_B) $(OBJS_P)
+bonus: $(NAME_B)
+
+$(NAME_B): $(OBJS_B) $(OBJS_P)
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(LIBFT) -lm -o $(NAME)
+	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(LIBFT) -lm -o $(NAME_B)
 
 clean:
 	make fclean -C ./src/libft
 	rm -f $(OBJS_M) $(OBJS_B) $(OBJS_P)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(NAME_B)
 
 re: fclean all
 
