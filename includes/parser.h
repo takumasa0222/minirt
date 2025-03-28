@@ -107,13 +107,14 @@ void            lit_lst_add_back(t_lit *lit, t_lit *new);
 
 //make_obj_data.c
 void            make_obj_data(char **split);
-void            set_pl_data(char **split, t_obj *data);
-void            set_sp_data(char **split, t_obj *data);
-void            set_cy_data(char **split, t_obj *data);
+void            set_pl_data(char **split, t_obj *new);
+void            set_sp_data(char **split, t_obj *new);
+void            set_cy_data(char **split, t_obj *new);
 void            obj_lst_add_back(t_obj *obj, t_obj *new);
 
 //parser.c
 void            parser(char *filename);
+void            init_parser_data(t_env *env, t_lit *lit, t_obj *obj);
 void            make_information(char *line);
 void            set_array(char *str, double arr[3], int select);
 void            set_struct_xyz(t_xyz *xyz, double arr[3]);
