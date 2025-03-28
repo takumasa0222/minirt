@@ -10,11 +10,11 @@ void    parser(char *filename)
 
     open_file(filename, &fd);
     env = (t_env *)safe_malloc(1, sizeof(t_env));
-    init_env(env);
-    set_get_env(SET, env);
     lit = NULL;
-    set_get_lit(SET, lit);
     obj = NULL;
+    init_env(env, lit);
+    set_get_env(SET, env);
+    set_get_lit(SET, lit);
     set_get_obj(SET, obj);
     printf("** after init env **\n");
     print_env_data();
@@ -28,6 +28,7 @@ void    parser(char *filename)
             break ;
         free(line);
     }
+    env->lit = lit;
     print_lit_data();
     print_obj_data();
 }
@@ -52,10 +53,7 @@ void    make_information(char *line)
     else if (check_first_element(split[0]) == LIT)
         make_lit_data(split);
     else if (check_first_element(split[0]) == OBJ)
-    {
-        // printf("make obj\n\n");
         make_obj_data(split);
-    }
     else
         print_error_and_exit("parser", "couldn't find identifier");
     free_split(split);

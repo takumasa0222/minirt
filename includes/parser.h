@@ -30,24 +30,12 @@ enum {
     CY
 };
 
-
 typedef struct s_xyx
 {
     double  x;
     double  y;
     double  z;
 }   t_xyz;
-
-typedef struct s_env
-{
-    int             flag[2];
-    unsigned int    amb_trgb;
-    t_xyz           cam_xyz;
-    t_xyz           cam_vector;
-    double          cam_degree;
-    // t_xyz           light_xyz;
-    // int             light_trgb;
-}   t_env;
 
 typedef struct s_lit
 {
@@ -57,6 +45,17 @@ typedef struct s_lit
     struct s_lit    *next;
 }   t_lit;
 
+typedef struct s_env
+{
+    int             flag[3];
+    unsigned int    amb_trgb;
+    t_xyz           cam_xyz;
+    t_xyz           cam_vector;
+    double          cam_degree;
+    // t_xyz           light_xyz;
+    // int             light_trgb;
+    t_lit           *lit;
+}   t_env;
 
 typedef struct s_obj
 {
@@ -91,7 +90,7 @@ double          ft_atof(char *nptr);
 
 //init.c
 void            init_xyz(t_xyz *xyz);
-void            init_env(t_env *env);
+void            init_env(t_env *env, t_lit *lit);
 void            init_lit(t_lit *lit);
 void            init_obj(t_obj *obj);
 
@@ -128,12 +127,11 @@ void            print_obj_data(void);
 //setter_getter.c
 t_env           *set_get_env(int select, t_env *new);
 t_lit           *set_get_lit(int select, t_lit *new);
-t_obj          *set_get_obj(int select, t_obj *new);
+t_obj           *set_get_obj(int select, t_obj *new);
 
 //utils.c
 void            open_file(char *file_name, int *fd);
 void            *safe_malloc(size_t count, size_t size);
 unsigned int    make_trgb(double t, int r, int g, int b);
-
 
 #endif
