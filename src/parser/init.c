@@ -7,8 +7,9 @@ void    init_xyz(t_xyz *xyz)
     xyz->z = 0.0;
 }
 
-void    init_env(t_env *env, t_lit *lit)
+void    init_env(t_env *env, t_lit *lit, int part)
 {
+    env->part = part;
     env->flag[A] = 0;
     env->flag[C] = 0;
     env->flag[L] = 0;

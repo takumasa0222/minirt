@@ -96,15 +96,15 @@ bool check_filename(char *filename)
 
 int main(int argc, char **argv)
 {
+    int     part;
     t_env   *env;
-    // t_lit   *lit;
     t_obj   *obj;
 
     if (argc != 2 || check_filename(argv[1]) == false)
         print_error_and_exit("main", "*.rt file required");
-    parser(argv[1]);
+    part = MANDATORY;
+    parser(argv[1], part);
     env = set_get_env(GET, NULL);
-    // lit = set_get_lit(GET, NULL);
     obj = set_get_obj(GET, NULL);
     // minirt(env, data);
     // minirt();

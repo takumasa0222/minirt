@@ -11,6 +11,8 @@
 # include <errno.h>
 # include "libft.h"
 
+# define MANDATORY 0
+# define BONUS 1
 # define SET 0
 # define GET 1
 # define ENV 0
@@ -47,6 +49,7 @@ typedef struct s_lit
 
 typedef struct s_env
 {
+    int             part;
     int             flag[3];
     unsigned int    amb_trgb;
     t_xyz           cam_xyz;
@@ -90,7 +93,7 @@ double          ft_atof(char *nptr);
 
 //init.c
 void            init_xyz(t_xyz *xyz);
-void            init_env(t_env *env, t_lit *lit);
+void            init_env(t_env *env, t_lit *lit, int part);
 void            init_lit(t_lit *lit);
 void            init_obj(t_obj *obj);
 
@@ -98,11 +101,10 @@ void            init_obj(t_obj *obj);
 void            make_env_data(char **split);
 void            set_amb_data(char **split, t_env *env);
 void            set_cam_data(char **split, t_env *env);
-void            set_lit_data(char **split, t_lit *lit);
 
 //make_lit_data.c
 void            make_lit_data(char **split);
-void            set_lit_data(char **split, t_lit *lit);
+void            set_lit_data(char **split, t_lit *lit, t_env *env);
 void            lit_lst_add_back(t_lit *lit, t_lit *new);
 
 //make_obj_data.c
@@ -113,8 +115,8 @@ void            set_cy_data(char **split, t_obj *new);
 void            obj_lst_add_back(t_obj *obj, t_obj *new);
 
 //parser.c
-void            parser(char *filename);
-void            init_parser_data(t_env *env, t_lit *lit, t_obj *obj);
+void            parser(char *filename, int part);
+void            init_parser_data(t_env *env, t_lit *lit, t_obj *obj, int part);
 void            make_information(char *line);
 void            set_array(char *str, double arr[3], int select);
 void            set_struct_xyz(t_xyz *xyz, double arr[3]);

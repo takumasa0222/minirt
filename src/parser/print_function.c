@@ -11,8 +11,10 @@ void    print_env_data(void)
     t_env   *env;
 
     env = set_get_env(GET, NULL);
+    printf("part = %d\n", env->part);
     printf("flag[A] = %d\n", env->flag[A]);
     printf("flag[C] = %d\n", env->flag[C]);
+    printf("flag[L] = %d\n", env->flag[L]);
     printf("amb_trgb = %X\n", env->amb_trgb);
     printf("cam_xyz.x = %0.1f\n", env->cam_xyz.x);
     printf("cam_xyz.y = %0.1f\n", env->cam_xyz.y);

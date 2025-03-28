@@ -1,6 +1,6 @@
 #include "parser.h"
 
-void    parser(char *filename)
+void    parser(char *filename, int part)
 {
     int     fd;
     char    *line;
@@ -12,7 +12,7 @@ void    parser(char *filename)
     env = (t_env *)safe_malloc(1, sizeof(t_env));
     lit = NULL;
     obj = NULL;
-    init_parser_data(env, lit, obj);
+    init_parser_data(env, lit, obj, part);
     // printf("** after init env **\n");
     // print_env_data();
     while (1)
@@ -32,9 +32,9 @@ void    parser(char *filename)
     print_obj_data();
 }
 
-void    init_parser_data(t_env *env, t_lit *lit, t_obj *obj)
+void    init_parser_data(t_env *env, t_lit *lit, t_obj *obj, int part)
 {
-    init_env(env, lit);
+    init_env(env, lit, part);
     set_get_env(SET, env);
     set_get_lit(SET, lit);
     set_get_obj(SET, obj);    
