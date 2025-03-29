@@ -51,4 +51,16 @@ void    calc_test()
     printf("minus_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
     tmp = minus_v_f(v1, f);
     printf("minus_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    v1.x = 3;
+    v1.y = 4;
+    v1.z = 5;    
+    printf("v1 = (3, 4, 5)\n");
+    ans = sqr(v1.x);
+    printf("sqr(v1.x) = %f\n", ans);
+    ans = calc_length2(v1);
+    printf("calc_length2(v1) = %f\n", ans);
+    ans = calc_length(v1);
+    printf("calc_length(v1) = %f\n", ans);
+    tmp = normalize(v1);
+    printf("normalize(v1) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
 }
