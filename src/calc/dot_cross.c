@@ -39,10 +39,10 @@ void    calc_test()
     printf("multi_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
     tmp = multi_v_f(v1, f);
     printf("multi_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
-    tmp = sub_v1_v2(v1, v2);
-    printf("sub_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
-    tmp = sub_v_f(v1, f);
-    printf("sub_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = divid_v1_v2(v1, v2);
+    printf("divid_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = divid_v_f(v1, f);
+    printf("divid_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
     tmp = plus_v1_v2(v1, v2);
     printf("plus_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
     tmp = plus_v_f(v1, f);

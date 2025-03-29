@@ -20,5 +20,5 @@ t_xyz   normalize(t_xyz vector)
     double  length;
 
     length = calc_length(vector);
-    return (sub_v_f(vector, length));
+    return (divid_v_f(vector, length));
 }

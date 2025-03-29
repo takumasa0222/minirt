@@ -18,7 +18,7 @@ SRCS_P	= src/parser/check_element.c \
 		  src/parser/setter_getter.c \
 		  src/parser/utils.c
 SRCS_C	= src/calc/dot_cross.c \
-		  src/calc/multi_sub_vector.c \
+		  src/calc/multi_divid_vector.c \
 		  src/calc/plus_minus_vector.c \
 		  src/calc/normalize.c
 
