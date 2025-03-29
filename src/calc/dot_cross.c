@@ -14,3 +14,41 @@ t_xyz   cross(t_xyz v1, t_xyz v2)
     tmp.z = v1.x * v2.y - v1.y * v2.x;
     return (tmp);
 }
+
+void    calc_test()
+{
+    t_xyz   v1;
+    t_xyz   v2;
+    t_xyz   tmp;
+    double  f = 3.0f;
+    double  ans;
+
+    v1.x = 1;
+    v1.y = 1;
+    v1.z = 1;
+    v2.x = 2;
+    v2.y = 2;
+    v2.z = 2;
+    printf("** calculator check **\n");
+    printf("v1 = (1, 1, 1) v2 = (2, 2, 2) f = 3.0f\n");
+    ans = dot(v1, v2);
+    printf("dot(v1, v2) = %f\n", ans);
+    tmp = cross(v1, v2);
+    printf("cross(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = multi_v1_v2(v1, v2);
+    printf("multi_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = multi_v_f(v1, f);
+    printf("multi_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = sub_v1_v2(v1, v2);
+    printf("sub_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = sub_v_f(v1, f);
+    printf("sub_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = plus_v1_v2(v1, v2);
+    printf("plus_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = plus_v_f(v1, f);
+    printf("plus_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = minus_v1_v2(v1, v2);
+    printf("minus_v1_v2(v1, v2) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+    tmp = minus_v_f(v1, f);
+    printf("minus_v_f(v1, f) = (%f, %f, %f)\n", tmp.x, tmp.y, tmp.z);
+}
