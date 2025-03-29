@@ -1,4 +1,5 @@
 *.o
 *.out
 *.DS_Store
-minirt
+miniRT
+miniRT_bonus
