@@ -4,7 +4,7 @@
 # include "parser.h"
 
 // dot_cross.c
-double   dot(t_xyz v1, t_xyz v2);
+double  dot(t_xyz v1, t_xyz v2);
 t_xyz   cross(t_xyz v1, t_xyz v2);
 void    calc_test();
 
