@@ -1,4 +1,4 @@
-#include "cal.h"
+#include "calc.h"
 
 t_xyz   multi_v1_v2(t_xyz v1, t_xyz v2)
 {
