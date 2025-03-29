@@ -16,6 +16,6 @@ typedef struct s_mlx_env
 }	t_mlx_env;
 
 int	close_btn_click(t_mlx_env *mlx);
-int	init_window(t_data *data, t_env *env);
+int	init_window(t_obj *data, t_env *env);
 
 #endif
