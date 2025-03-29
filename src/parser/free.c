@@ -14,14 +14,32 @@ void	free_split(char **split)
 		free(split);
 }
 
-void	free_data(t_data *data)
+void	free_lit(t_lit *lit)
 {
-	if (data)
+	t_lit	*tmp;
+
+	if (lit)
 	{
-		while (data)
+		while (lit)
 		{
-			free(data);
-			data = data->next;
+			tmp = lit->next;
+			free(lit);
+			lit = tmp;
+		}
+	}
+}
+
+void	free_obj(t_obj *obj)
+{
+	t_obj	*tmp;
+
+	if (obj)
+	{
+		while (obj)
+		{
+			tmp = obj->next;
+			free(obj);
+			obj = tmp;
 		}
 	}
 }

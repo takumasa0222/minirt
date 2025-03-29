@@ -1,20 +1,20 @@
 #include "parser.h"
 
-void    parser(char *filename)
+void    parser(char *filename, int part)
 {
     int     fd;
     char    *line;
     t_env   *env;
-    t_data  *data;
+    t_lit   *lit;
+    t_obj   *obj;
 
     open_file(filename, &fd);
     env = (t_env *)safe_malloc(1, sizeof(t_env));
-    init_env(env);
-    set_get_env(SET, env);
-    data = NULL;
-    set_get_data(SET, data);
-    printf("** after init env **\n");
-    print_env_data();
+    lit = NULL;
+    obj = NULL;
+    init_parser_data(env, lit, obj, part);
+    // printf("** after init env **\n");
+    // print_env_data();
     while (1)
     {
         line = NULL;
@@ -25,7 +25,19 @@ void    parser(char *filename)
             break ;
         free(line);
     }
+    env->lit = lit;
+    printf("\n** after read line **\n");
+    print_env_data();
+    print_lit_data();
     print_obj_data();
+}
+
+void    init_parser_data(t_env *env, t_lit *lit, t_obj *obj, int part)
+{
+    init_env(env, lit, part);
+    set_get_env(SET, env);
+    set_get_lit(SET, lit);
+    set_get_obj(SET, obj);    
 }
 
 void    make_information(char *line)
@@ -40,16 +52,11 @@ void    make_information(char *line)
         return ;
     }
     if (check_first_element(split[0]) == ENV)
-    {
         make_env_data(split);
-        printf("\n** after read line **\n");
-        print_env_data();
-    }
+    else if (check_first_element(split[0]) == LIT)
+        make_lit_data(split);
     else if (check_first_element(split[0]) == OBJ)
-    {
-        // printf("make obj\n\n");
         make_obj_data(split);
-    }
     else
         print_error_and_exit("parser", "couldn't find identifier");
     free_split(split);

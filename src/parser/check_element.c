@@ -2,9 +2,10 @@
 
 int check_first_element(char *str)
 {
-    if (ft_memcmp(str, "A", 2) == 0 || !ft_memcmp(str, "C", 2)
-        || !ft_memcmp(str, "L", 2))
+    if (!ft_memcmp(str, "A", 2) || !ft_memcmp(str, "C", 2))
         return (ENV);
+    if (!ft_memcmp(str, "L", 2))
+        return (LIT);
     if (!ft_memcmp(str, "sp", 3) || !ft_memcmp(str, "pl", 3)
         || !ft_memcmp(str, "cy", 3))
         return (OBJ);

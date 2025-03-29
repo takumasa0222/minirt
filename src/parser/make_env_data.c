@@ -9,8 +9,8 @@ void    make_env_data(char **split)
         set_amb_data(split, env);
     else if (ft_memcmp(split[0], "C", 2) == 0)
         set_cam_data(split, env);
-    else
-        set_light_data(split,env);
+    // else
+    //     set_light_data(split,env);
 }
 
 void    set_amb_data(char **split, t_env *env)
@@ -53,23 +53,23 @@ void    set_cam_data(char **split, t_env *env)
     env->cam_degree = degree;
 }
 
-void    set_light_data(char **split, t_env *env)
-{
-    double  xyz[3];
-    double  t;
-    double  rgb[3];
+// void    set_light_data(char **split, t_env *env)
+// {
+//     double  xyz[3];
+//     double  t;
+//     double  rgb[3];
 
-    if (env->flag[L] == 1)
-        print_error_and_exit("set_light_data", "L data already existed");
-    env->flag[L] = 1;
-    if (count_split(split) != 4)
-        print_error_and_exit("set_light_data", "number of arguments is not 4");
-    set_array(split[1], xyz, OTHER);
-    set_struct_xyz(&env->light_xyz, xyz);
-    t = ft_atof(split[2]);
-    if (is_0_1(t) == false)
-        print_error_and_exit("set_light_data",
-            "3rd element is not between 0 and 1"); 
-    set_array(split[3], rgb, RGB);
-    env->light_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
-}
+//     if (env->flag[L] == 1)
+//         print_error_and_exit("set_light_data", "L data already existed");
+//     env->flag[L] = 1;
+//     if (count_split(split) != 4)
+//         print_error_and_exit("set_light_data", "number of arguments is not 4");
+//     set_array(split[1], xyz, OTHER);
+//     set_struct_xyz(&env->light_xyz, xyz);
+//     t = ft_atof(split[2]);
+//     if (is_0_1(t) == false)
+//         print_error_and_exit("set_light_data",
+//             "3rd element is not between 0 and 1"); 
+//     set_array(split[3], rgb, RGB);
+//     env->light_trgb = make_trgb(t, (int)rgb[0], (int)rgb[1], (int)rgb[2]);
+// }

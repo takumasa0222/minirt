@@ -11,6 +11,7 @@ void    print_env_data(void)
     t_env   *env;
 
     env = set_get_env(GET, NULL);
+    printf("part = %d\n", env->part);
     printf("flag[A] = %d\n", env->flag[A]);
     printf("flag[C] = %d\n", env->flag[C]);
     printf("flag[L] = %d\n", env->flag[L]);
@@ -22,31 +23,44 @@ void    print_env_data(void)
     printf("cam_vector.y = %0.1f\n", env->cam_vector.y);
     printf("cam_vector.z = %0.1f\n", env->cam_vector.z);
     printf("cam_degree = %0.1f\n", env->cam_degree);
-    printf("light_xyz.x = %0.1f\n", env->light_xyz.x);
-    printf("light_xyz.y = %0.1f\n", env->light_xyz.y);
-    printf("light_xyz.z = %0.1f\n", env->light_xyz.z);
-    printf("light_trgb = %X\n", env->light_trgb);
+}
+
+void    print_lit_data(void)
+{
+    t_lit   *lit;
+
+    lit = set_get_lit(GET, NULL);
+    while (lit)
+    {
+        printf("\n** print_lit_data **\n");
+        printf("lit->flag = %d\n", lit->flag);
+        printf("lti->xyz.x = %0.1f\n", lit->xyz.x);
+        printf("lit->xyz.y = %0.1f\n", lit->xyz.y);
+        printf("lit->xyz.z = %0.1f\n", lit->xyz.z);
+        printf("lit->trgb = %X\n", lit->trgb);
+        lit = lit->next;
+    }
 }
 
 void    print_obj_data(void)
 {
-    t_data  *data;
+    t_obj  *obj;
 
-    data = set_get_data(GET, NULL);
-    while (data)
+    obj = set_get_obj(GET, NULL);
+    while (obj)
     {
         printf("\n** print_obj_data **\n");
-        printf("id = %d\n", data->id);
-        printf("xyz.x = %0.1f\n", data->xyz.x);
-        printf("xyz.y = %0.1f\n", data->xyz.y);
-        printf("xyz.z = %0.1f\n", data->xyz.z);
-        printf("vector.x = %0.1f\n", data->vector.x);
-        printf("vector.y = %0.1f\n", data->vector.y);
-        printf("vector.z = %0.1f\n", data->vector.z);
-        printf("rgb = %X\n", data->rgb);
-        printf("diamater = %0.2f\n", data->diameter);
-        printf("height = %0.2f\n", data->height);
+        printf("id = %d\n", obj->id);
+        printf("xyz.x = %0.1f\n", obj->xyz.x);
+        printf("xyz.y = %0.1f\n", obj->xyz.y);
+        printf("xyz.z = %0.1f\n", obj->xyz.z);
+        printf("vector.x = %0.1f\n", obj->vector.x);
+        printf("vector.y = %0.1f\n", obj->vector.y);
+        printf("vector.z = %0.1f\n", obj->vector.z);
+        printf("rgb = %X\n", obj->rgb);
+        printf("diamater = %0.2f\n", obj->diameter);
+        printf("height = %0.2f\n", obj->height);
 
-        data = data->next;
+        obj = obj->next;
     }
 }
