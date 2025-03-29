@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 
     if (argc != 2 || check_filename(argv[1]) == false)
         print_error_and_exit("main", "*.rt file required");
-    part = MANDATORY;
+    part = BONUS;
     parser(argv[1], part);
     env = set_get_env(GET, NULL);
     obj = set_get_obj(GET, NULL);
