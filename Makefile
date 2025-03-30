@@ -2,7 +2,7 @@ NAME	= miniRT
 NAME_B  = miniRT_bonus
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
-FLAGS	+= -fsanitize=thread -g
+FLAGS	+= -fsanitize=address -g
 SRCS_M  = src/main.c
 SRCS_B  = src/main_bonus.c
 SRCS_P	= src/parser/check_element.c \

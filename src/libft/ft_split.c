@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 18:54:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/03/23 17:14:12 by tsururukako      ###   ########.fr       */
+/*   Updated: 2025/03/30 15:56:02 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	**ft_split(char const *s, char *str)
 {
 	int		i;
 	char	**result;
-	
+
 	if (!s || !str)
 		print_error_and_exit("split", "split function couldn't receive string");
 	result = (char **)safe_malloc(ft_count_i(s, str) + 1, sizeof(char *));
