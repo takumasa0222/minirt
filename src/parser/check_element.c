@@ -28,8 +28,8 @@ void    check_array_num(double arr[3], int select)
     {
         if (arr[0] == 0 && arr[1] == 0 && arr[2] == 0)
             print_error_and_exit("vector", "invalid vector (0, 0, 0)");
-        if (is_0_1(arr[0]) * is_0_1(arr[1]) * is_0_1(arr[2]) == 0)
-            print_error_and_exit("vecort", "number is not between 0 and 1");
+        if (is_minus1_1(arr[0]) * is_minus1_1(arr[1]) * is_minus1_1(arr[2]) == 0)
+            print_error_and_exit("vector", "number is not between -1 and 1");
         // 以下はベクトル計算機作成後に実装
         // if (check_length(arr) == false)
         //     print_error_and_exit("vector", "length of the vector isn't 1");
