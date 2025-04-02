@@ -16,36 +16,43 @@ SRCS_P	= src/parser/check_element.c \
 		  src/parser/parser.c \
 		  src/parser/print_function.c \
 		  src/parser/setter_getter.c \
-		  src/parser/utils.c 
+		  src/parser/utils.c \
 		  src/ui/init_window.c \
 		  src/ui/close_handler.c
+
+SRCS_C	= src/calc/dot_cross.c \
+		  src/calc/multi_divid_vector.c \
+		  src/calc/plus_minus_vector.c \
+		  src/calc/normalize.c \
+		  src/calc/test.c
 
 OBJS_M  = $(SRCS_M:.c=.o)
 OBJS_B  = $(SRCS_B:.c=.o)
 OBJS_P	= $(SRCS_P:.c=.o)
+OBJS_C	= $(SRCS_C:.c=.o)
 HEADER	= ./includes
 LIBFT	= ./src/libft/libft.a
 
 %.o: %.c
 	$(CC) $(FLAGS) -I$(HEADER) -Imlx_linux -O3 -c $< -o $@
 
-$(NAME): $(OBJS_M) $(OBJS_P)
+$(NAME): $(OBJS_M) $(OBJS_P) $(OBJS_C)
 	@make -C ./mlx_linux
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(FLAGS) $(OBJS_M) $(OBJS_P) $(OBJS_C) $(LIBFT) -lm -o $(NAME)
 
 all: $(NAME)
 
 bonus: $(NAME_B)
 
-$(NAME_B): $(OBJS_B) $(OBJS_P)
+$(NAME_B): $(OBJS_B) $(OBJS_P) $(OBJS_C)
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_B)
+	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(LIBFT)  -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_B)
 
 clean:
 	@make clean -C ./mlx_linux
 	make fclean -C ./src/libft
-	rm -f $(OBJS_M) $(OBJS_B) $(OBJS_P)
+	rm -f $(OBJS_M) $(OBJS_B) $(OBJS_P) $(OBJS_C)
 
 fclean: clean
 	rm -f $(NAME) $(NAME_B)
