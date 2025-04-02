@@ -112,9 +112,9 @@ int main(int argc, char **argv)
     // minirt(env, data);
     // minirt();
 	init_window(obj, env);
-    free_lit(env->lit);
-    free(env);
-    free_obj(obj);
+    //free_lit(env->lit);
+    //free(env);
+    //free_obj(obj);
     calc_test();
     printf("end\n");
     return (0);

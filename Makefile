@@ -1,8 +1,8 @@
 NAME	= miniRT
 NAME_B  = miniRT_bonus
 CC		= cc
-FLAGS	= -Wall -Wextra -Werror
-FLAGS	+= -fsanitize=thread -g
+FLAGS	= -Wall -Wextra -Werror -g
+#FLAGS	+= -fsanitize=thread -g
 SRCS_M  = src/main.c
 SRCS_B  = src/main_bonus.c
 SRCS_P	= src/parser/check_element.c \
@@ -39,13 +39,14 @@ LIBFT	= ./src/libft/libft.a
 $(NAME): $(OBJS_M) $(OBJS_P) $(OBJS_C)
 	@make -C ./mlx_linux
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJS_M) $(OBJS_P) $(OBJS_C) $(LIBFT) -lm -o $(NAME)
+	$(CC) $(FLAGS) $(OBJS_M) $(OBJS_P) $(OBJS_C) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 
 all: $(NAME)
 
 bonus: $(NAME_B)
 
 $(NAME_B): $(OBJS_B) $(OBJS_P) $(OBJS_C)
+	@make -C ./mlx_linux
 	make -C ./src/libft
 	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(LIBFT)  -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_B)
 

@@ -28,5 +28,8 @@ typedef struct s_mlx_env
 
 int	close_btn_click(t_mlx_env *mlx);
 int	init_window(t_obj *data, t_env *env);
-
+int	render_window(t_mlx_env *mlx, t_obj *obj, t_env *env);
+int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env);
+double	hit_ray(t_obj *obj, t_env *env, t_xyz cam_dir);
+int	ray_tracing(t_mlx_env *mlx, t_obj *obj, t_env *env);
 #endif
