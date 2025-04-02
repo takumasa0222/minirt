@@ -1,8 +1,7 @@
 {
 	"files.associations": {
 		"parser.h": "c",
-		"render.h": "c",
-		"mlx.h": "c",
-		"raytracing.h": "c"
+		"ui.h": "c",
+		"math.h": "c"
 	}
 }
