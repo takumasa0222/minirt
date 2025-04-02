@@ -20,7 +20,8 @@ SRCS_P	= src/parser/check_element.c \
 SRCS_C	= src/calc/dot_cross.c \
 		  src/calc/multi_divid_vector.c \
 		  src/calc/plus_minus_vector.c \
-		  src/calc/normalize.c
+		  src/calc/normalize.c \
+		  src/calc/test.c
 
 OBJS_M  = $(SRCS_M:.c=.o)
 OBJS_B  = $(SRCS_B:.c=.o)
