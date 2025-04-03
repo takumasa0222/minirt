@@ -31,7 +31,8 @@ void    set_pl_data(char **split, t_obj *new)
     set_array(split[2], vector, VECTOR);
     set_struct_xyz(&new->vector, vector);
     set_array(split[3], rgb, RGB);
-    new->rgb = make_trgb(0, rgb[0], rgb[1], rgb[2]);
+    set_struct_xyz(&new->rgb, rgb);
+    // new->rgb = make_trgb(0, rgb[0], rgb[1], rgb[2]);
 }
 
 void    set_sp_data(char **split, t_obj *new)
@@ -48,7 +49,8 @@ void    set_sp_data(char **split, t_obj *new)
     if (new->diameter < 0)
        print_error_and_exit("set_sp_data", "diameter shuold be over 0"); 
     set_array(split[3], rgb, RGB);
-    new->rgb = make_trgb(0, rgb[0], rgb[1], rgb[2]);
+    set_struct_xyz(&new->rgb, rgb);
+    // new->rgb = make_trgb(0, rgb[0], rgb[1], rgb[2]);
 }
 
 void    set_cy_data(char **split, t_obj *new)
@@ -72,7 +74,8 @@ void    set_cy_data(char **split, t_obj *new)
     if (new->height < 0)
        print_error_and_exit("set_cam_data", "height shuold be over 0");
     set_array(split[5], rgb, RGB);
-    new->rgb = make_trgb(0, rgb[0], rgb[1], rgb[2]);
+    set_struct_xyz(&new->rgb, rgb);
+    // new->rgb = make_trgb(0, rgb[0], rgb[1], rgb[2]);
 }
 
 void    obj_lst_add_back(t_obj *obj, t_obj *new)

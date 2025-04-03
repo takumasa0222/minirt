@@ -17,7 +17,7 @@ void    make_lit_data(char **split)
 void    set_lit_data(char **split, t_lit *lit, t_env *env)
 {
     double  xyz[3];
-    double  t;
+    // double  t;
     double  rgb[3];
 
 
@@ -28,12 +28,13 @@ void    set_lit_data(char **split, t_lit *lit, t_env *env)
     env->flag[L] += 1;
     set_array(split[1], xyz, OTHER);
     set_struct_xyz(&lit->xyz, xyz);
-    t = ft_atof(split[2]);
-    if (is_0_1(t) == false)
+    lit->t = ft_atof(split[2]);
+    if (is_0_1(lit->t) == false)
         print_error_and_exit("set_light_data",
             "3rd element is not between 0 and 1"); 
     set_array(split[3], rgb, RGB);
-    lit->trgb = make_trgb(t, rgb[0], rgb[1], rgb[2]);
+    set_struct_xyz(&lit->rgb, rgb);
+    // lit->trgb = make_trgb(t, rgb[0], rgb[1], rgb[2]);
 }
 
 void    lit_lst_add_back(t_lit *lit, t_lit *new)

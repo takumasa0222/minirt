@@ -17,8 +17,12 @@ void    *safe_malloc(size_t count, size_t size)
     return (tmp);
 }
 
-unsigned int    make_trgb(double t, int r, int g, int b)
+// unsigned int    make_trgb(double t, int r, int g, int b)
+unsigned int    make_trgb(double t, double r, double g, double b)
 {
     t = round(255 * t);
-    return ((int)t << 24 | r << 16 | g << 8 | b);
+    r = round(r);
+    g = round(g);
+    b = round(b);
+    return ((int)t << 24 | (int)r << 16 | (int)g << 8 | (int)b);
 }

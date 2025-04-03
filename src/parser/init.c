@@ -13,7 +13,10 @@ void    init_env(t_env *env, t_lit *lit, int part)
     env->flag[A] = 0;
     env->flag[C] = 0;
     env->flag[L] = 0;
-    env->amb_trgb = 0;
+    env->amb_t = 0;
+    env->amb_rgb.x = 0;
+    env->amb_rgb.y = 0;
+    env->amb_rgb.z = 0;
     init_xyz(&env->cam_xyz);
     init_xyz(&env->cam_vector);
     env->cam_degree = 0.0;
@@ -26,7 +29,10 @@ void    init_lit(t_lit *lit)
 {
     lit->flag = 0;
     init_xyz(&lit->xyz);
-    lit->trgb = 0;
+    lit->t = 0;
+    lit->rgb.x = 0;
+    lit->rgb.y = 0;
+    lit->rgb.z = 0;
     lit->next = NULL;
 }
 
@@ -35,7 +41,9 @@ void    init_obj(t_obj *data)
     data->id = -1;
     init_xyz(&data->xyz);
     init_xyz(&data->vector);
-    data->rgb = 0;
+    data->rgb.x = 0;
+    data->rgb.y = 0;
+    data->rgb.z = 0;
     data->diameter = 0.0;
     data->height = 0.0;
     data->next = NULL;
