@@ -1,4 +1,6 @@
 #include "parser.h"
+#include "ui.h"
+#include "raytracing.h"
 #include "calc.h"
 
 void    minirt(void)
@@ -109,9 +111,10 @@ int main(int argc, char **argv)
     obj = set_get_obj(GET, NULL);
     // minirt(env, data);
     // minirt();
-    free_lit(env->lit);
-    free(env);
-    free_obj(obj);
+	init_window(obj, env);
+    //free_lit(env->lit);
+    //free(env);
+    //free_obj(obj);
     calc_test();
     printf("end\n");
     return (0);
