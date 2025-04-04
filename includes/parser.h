@@ -43,7 +43,9 @@ typedef struct s_lit
 {
     int             flag;
     t_xyz           xyz;
-    int             trgb;
+    // int             trgb;
+    double          t;
+    t_xyz           rgb;
     struct s_lit    *next;
 }   t_lit;
 
@@ -51,7 +53,9 @@ typedef struct s_env
 {
     int             part;
     int             flag[3];
-    unsigned int    amb_trgb;
+    // unsigned int    amb_trgb;
+    double          amb_t;
+    t_xyz           amb_rgb;
     t_xyz           cam_xyz;
     t_xyz           cam_vector;
     double          cam_degree;
@@ -65,7 +69,8 @@ typedef struct s_obj
     int             id;
     t_xyz           xyz;
     t_xyz           vector;
-    unsigned int    rgb;
+    // unsigned int    rgb;
+    t_xyz           rgb;
     double          diameter;
     double          height;
     struct s_obj   *next;
@@ -124,7 +129,7 @@ void            set_struct_xyz(t_xyz *xyz, double arr[3]);
 //print_function.c
 void            print_error_and_exit(char *func_name, char *message);
 void            print_env_data(void);
-void            print_lit_data(void);
+void            print_lit_data(t_lit *lit);
 void            print_obj_data(void);
 
 //setter_getter.c
@@ -135,6 +140,8 @@ t_obj           *set_get_obj(int select, t_obj *new);
 //utils.c
 void            open_file(char *file_name, int *fd);
 void            *safe_malloc(size_t count, size_t size);
-unsigned int    make_trgb(double t, int r, int g, int b);
+// unsigned int    make_trgb(double t, int r, int g, int b);
+unsigned int    make_trgb(double t, double r, double g, double b);
+
 
 #endif

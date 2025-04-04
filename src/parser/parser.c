@@ -13,8 +13,6 @@ void    parser(char *filename, int part)
     lit = NULL;
     obj = NULL;
     init_parser_data(env, lit, obj, part);
-    // printf("** after init env **\n");
-    // print_env_data();
     while (1)
     {
         line = NULL;
@@ -25,10 +23,9 @@ void    parser(char *filename, int part)
             break ;
         free(line);
     }
+    lit = set_get_lit(GET, NULL);
     env->lit = lit;
-    printf("\n** after read line **\n");
     print_env_data();
-    print_lit_data();
     print_obj_data();
 }
 
