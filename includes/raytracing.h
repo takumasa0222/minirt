@@ -28,4 +28,5 @@ typedef struct s_hit_point
 }	t_hit_point;
 
 int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color);
+t_xyz	pls_shade(t_obj *obj, t_lit *lit, double diff_ref, double spec_ref);
 #endif
