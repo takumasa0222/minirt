@@ -74,21 +74,39 @@ void	set_screen_vector(t_xyz *screen, int x, int y)
 double	hit_ray(t_obj *obj, t_env *env, t_xyz cam_dir)
 {
 	t_xyz	camera_to_obj;
-	double	a;
-	double	b;
-	double	c;
+	double	abcd[4];
 	double	radius;
+	double	t[3];
+	// double	t1;
+	// double	t2;
 
 	radius = obj->diameter / 2.0;
 // この例では球に対しての判定を行う
-	camera_to_obj = minus_v1_v2(obj->vector, env->cam_xyz);
-	a = squared_norm(&cam_dir);
-	b = 2 * dot(cam_dir, camera_to_obj);
-	c = squared_norm(&camera_to_obj) - radius * radius;
-	//printf("a = %f\n", a);
-	//printf("b = %f\n", b);
-	//printf("c = %f\n", c);
-	return (b * b - 4 * a * c);
+	camera_to_obj = minus_v1_v2(env->cam_xyz, obj->vector);
+	abcd[L_A] = squared_norm(&cam_dir);
+	abcd[L_B] = 2 * dot(cam_dir, camera_to_obj);
+	abcd[L_C] = squared_norm(&camera_to_obj) - radius * radius;
+	abcd[L_D] = abcd[L_B] * abcd[L_B] - 4 * abcd[L_A] * abcd[L_C];
+	// 媒介変数 t の計算
+	t[0] = -1;
+	if (abcd[L_D] == 0)
+		t[0] = - abcd[L_B] / (2 * abcd[L_A]);
+	else if (abcd[L_D] > 0)
+	{
+		t[1] = (- abcd[L_B] + sqrt(abcd[L_D])) / (2 * abcd[L_A]);
+		t[2] = (- abcd[L_B] - sqrt(abcd[L_D])) / (2 * abcd[L_A]);
+		if (t[1] > 0 && t[2] > 0)
+			t[0] = fmin(t[1], t[2]);
+		else if (t[1] > 0)
+			t[0] = t[1];
+		else if (t[2] > 0)
+			t[0] = t[2];
+		//printf("t: (%f, %f, %f)\n", t[0], t[1], t[2]);
+		//printf("A: %f, B: %f, C: %f, D: %f\n", abcd[L_A], abcd[L_B], abcd[L_C], abcd[L_D]);
+		//printf("cam_dir: (%f, %f, %f)\n", cam_dir.x, cam_dir.y, cam_dir.z);
+		//printf("camera_to_obj: (%f, %f, %f)\n", camera_to_obj.x, camera_to_obj.y, camera_to_obj.z);
+	}
+	return (t[0]);
 }
 
 unsigned int	set_trgb(int t, int r, int g, int b)
@@ -110,14 +128,36 @@ int rgb_to_int(int r, int g, int b)
     return (r << 16) | (g << 8) | b;
 }
 
+unsigned int	clamp(double value, int min, int max)
+{
+	if (value < min)
+		return min;
+	else if (value > max)
+		return max;
+	else
+		return value;
+}
+
+void	clamp_xyz(t_xyz *rgb, double dot_res)
+{
+	rgb->x = clamp(rgb->x * dot_res, 0, 255);
+	rgb->y = clamp(rgb->y * dot_res, 0, 255);
+	rgb->z = clamp(rgb->z * dot_res, 0, 255);
+}
+
 int	ray_tracing(t_mlx_env *mlx, t_obj *obj, t_env *env)
 {
-	int				x;
-	int				y;
+	int		x;
+	int		y;
 	t_xyz	screen_vec;
 	t_xyz	dir_vec;
-
-
+	t_xyz	incident_dir;//光の入射ベクトル
+	t_xyz	normal_dir;//法線ベクトル
+	t_xyz	cross_vec;//球との交点ベクトル
+	double	t;
+	double	dot_res;
+	t_xyz color;
+	
 	y = -1;
 	while (++y < W_HEIGHT)
 	{
@@ -128,11 +168,30 @@ int	ray_tracing(t_mlx_env *mlx, t_obj *obj, t_env *env)
 			set_screen_vector(&screen_vec, x, y);
 			// 方向ベクトル
 			dir_vec = normalize(minus_v1_v2(screen_vec, env->cam_xyz));
-			if (hit_ray(obj, env, dir_vec) >= 0)
-				color_set_to_pixel(mlx->img, x, y, obj->rgb);
+			t = hit_ray(obj, env, dir_vec);
+			if (t > 0)
+			{
+				// diffuse light の実装
+				// 正規化した入射ベクトル
+				cross_vec =  plus_v1_v2(env->cam_xyz, multi_v_f(dir_vec, t));
+				incident_dir = minus_v1_v2(env->lit->xyz, cross_vec);
+				incident_dir = normalize(incident_dir);
+				// 正規化した法線ベクトル
+				normal_dir = minus_v1_v2(cross_vec, obj->vector);
+				normal_dir = normalize(normal_dir);
+				// 法線ベクトルと入射ベクトルの内積
+				dot_res = dot(incident_dir, normal_dir);
+				color = obj->rgb;
+				clamp_xyz(&color, dot_res);
+				//multi_v_f(obj->rgb, dot_res);
+				if (dot_res > 0)
+					printf("%f\n",dot_res);
+				color_set_to_pixel(mlx->img, x, y, make_trgb(dot_res, color.x, color.y, color.z));
+			}
 			else
-				color_set_to_pixel(mlx->img, x, y, rgb_to_int(0,255,255));
-
+			{
+				color_set_to_pixel(mlx->img, x, y, rgb_to_int(100,149,237));
+			}
 		}
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img->img, 0, 0);
