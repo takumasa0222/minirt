@@ -143,7 +143,6 @@ int	ray_tracing(t_mlx_env *mlx, t_obj *obj, t_env *env)
 	double	t;
 	double	dot_res;
 
-
 	y = -1;
 	while (++y < W_HEIGHT)
 	{
