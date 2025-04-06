@@ -203,6 +203,12 @@ t_xyz	calc_color(t_obj *obj, t_env *env, double diff_ref, double spec_ref)
 	dif_col = multi_v_f(dif_col, env->lit->t);
 	spec_col = multi_v_f(multi_v_f(lit_rgb, 255.0), spec_ref);
 	spec_col = multi_v_f(spec_col, env->lit->t);
+	// dif_col.x = obj->rgb.x * lit_rgb.x *diff_ref * env->lit->t;
+	// dif_col.y = obj->rgb.y * lit_rgb.y *diff_ref * env->lit->t;
+	// dif_col.z = obj->rgb.z * lit_rgb.z *diff_ref * env->lit->t;
+	// spec_col.x = 255.0 * lit_rgb.x *spec_ref * env->lit->t;
+	// spec_col.y = 255.0 * lit_rgb.y *spec_ref * env->lit->t;
+	// spec_col.z = 255.0 * lit_rgb.z *spec_ref * env->lit->t;
 	amb_col.x = obj->rgb.x * env->amb_rgb.x / 255.0 * env->amb_t;
 	amb_col.y = obj->rgb.y * env->amb_rgb.y / 255.0 * env->amb_t;
 	amb_col.z = obj->rgb.z * env->amb_rgb.z / 255.0 * env->amb_t;
@@ -253,9 +259,10 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 	double		specular_ref;//鏡面反射光
 
 	i = hit_nearest_obj(obj, env, &cam_ray, &hit_obj.dist);
+	printf("i:%d, dist:%f\n", i, hit_obj.dist);
 	dot_res = 0.0;
 	specular_ref = 0.0;
-	if (i > 0)
+	if (i >= 0)
 	{
 		while (env->lit)
 		{
@@ -267,9 +274,9 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 			incident_dir = normalize(incident_dir);
 			// 正規化した法線ベクトル(球の中心から、交点)
 			hit_obj.norm = minus_v1_v2(hit_obj.pos, obj->vector);
-			hit_obj.norm = normalize(hit_obj.norm );
+			hit_obj.norm = normalize(hit_obj.norm);
 			// 法線ベクトルと入射ベクトルの内積(拡散反射光の輝度)
-			dot_res = dot(incident_dir, hit_obj.norm );
+			dot_res = fmax(dot(incident_dir, hit_obj.norm), 0.0);
 			//鏡面反射光の計算
 			// 正反射ベクトル
 			if (dot_res > 0)
@@ -283,6 +290,7 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 				specular_ref = pow(clamp_double(specular_ref, 0.0, 1.0), SHINENESS);
 			}
 			*color = calc_color(obj, env, dot_res, specular_ref);
+			env->lit = NULL;
 		}
 		return (1);
 	}

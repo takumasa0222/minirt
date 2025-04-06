@@ -3,3 +3,5 @@
 *.DS_Store
 miniRT
 miniRT_bonus
+out
+mlx_linux
