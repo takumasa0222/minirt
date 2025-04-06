@@ -138,11 +138,48 @@ unsigned int	clamp(double value, int min, int max)
 		return value;
 }
 
+double	clamp_double(double value, double min, double max)
+{
+	if (value < min)
+		return min;
+	else if (value > max)
+		return max;
+	else
+		return value;
+}
+
 void	clamp_xyz(t_xyz *rgb, double dot_res)
 {
 	rgb->x = clamp(rgb->x * dot_res, 0, 255);
 	rgb->y = clamp(rgb->y * dot_res, 0, 255);
 	rgb->z = clamp(rgb->z * dot_res, 0, 255);
+}
+
+t_xyz	calc_color(t_obj *obj, t_env *env, double diff_ref, double spec_ref)
+{
+	t_xyz	dif_col;
+	t_xyz	spec_col;
+	t_xyz	amb_col;
+	t_xyz	ret_col;
+	t_xyz	lit_rgb;
+
+	lit_rgb = env->lit->rgb;
+	lit_rgb.x /= 255.0;
+	lit_rgb.y /= 255.0;
+	lit_rgb.z /= 255.0;
+	dif_col.x = obj->rgb.x * lit_rgb.x *diff_ref * env->lit->t;
+	dif_col.y = obj->rgb.y * lit_rgb.y *diff_ref * env->lit->t;
+	dif_col.z = obj->rgb.z * lit_rgb.z *diff_ref * env->lit->t;
+	spec_col.x = 255.0 * lit_rgb.x *spec_ref * env->lit->t;
+	spec_col.y = 255.0 * lit_rgb.y *spec_ref * env->lit->t;
+	spec_col.z = 255.0 * lit_rgb.z *spec_ref * env->lit->t;
+	amb_col.x = obj->rgb.x * env->amb_rgb.x / 255.0 * env->amb_t;
+	amb_col.y = obj->rgb.y * env->amb_rgb.y / 255.0 * env->amb_t;
+	amb_col.z = obj->rgb.z * env->amb_rgb.z / 255.0 * env->amb_t;
+	ret_col.x = clamp(amb_col.x + dif_col.x + spec_col.x, 0, 255);
+	ret_col.y = clamp(amb_col.y + dif_col.y + spec_col.y, 0, 255);
+	ret_col.z = clamp(amb_col.z + dif_col.z + spec_col.z, 0, 255);
+	return (ret_col);
 }
 
 int	ray_tracing(t_mlx_env *mlx, t_obj *obj, t_env *env)
@@ -157,13 +194,19 @@ int	ray_tracing(t_mlx_env *mlx, t_obj *obj, t_env *env)
 	double	t;
 	double	dot_res;
 	t_xyz color;
+	t_xyz reverse_vec;// 正反射ベクトル
+	t_xyz rev_cam_vec;// 視線の反対ベクトル
+	double	specular_ref;//鏡面反射光
 	
+
 	y = -1;
 	while (++y < W_HEIGHT)
 	{
 		x = -1;
 		while (++x < W_WIDTH)
-		{
+		{	
+			dot_res = 0.0;
+			specular_ref = 0.0;
 			// pixel から、ベクトルへの変換
 			set_screen_vector(&screen_vec, x, y);
 			// 方向ベクトル
@@ -179,14 +222,24 @@ int	ray_tracing(t_mlx_env *mlx, t_obj *obj, t_env *env)
 				// 正規化した法線ベクトル
 				normal_dir = minus_v1_v2(cross_vec, obj->vector);
 				normal_dir = normalize(normal_dir);
-				// 法線ベクトルと入射ベクトルの内積
+				// 法線ベクトルと入射ベクトルの内積(拡散反射光の輝度)
 				dot_res = dot(incident_dir, normal_dir);
-				color = obj->rgb;
-				clamp_xyz(&color, dot_res);
-				//multi_v_f(obj->rgb, dot_res);
+				//環境光(ambient ligth)の輝度の計算　La = Ka(環境光反射係数)Ea(環境光の照度)
+				//env->amb_t
+				//鏡面反射光の計算
+				// 正反射ベクトル
 				if (dot_res > 0)
-					printf("%f\n",dot_res);
-				color_set_to_pixel(mlx->img, x, y, make_trgb(dot_res, color.x, color.y, color.z));
+				{
+					reverse_vec = minus_v1_v2(multi_v_f(normal_dir, 2 * dot_res), incident_dir);
+					reverse_vec = normalize(reverse_vec);
+					rev_cam_vec = multi_v_f(dir_vec, -1);
+					rev_cam_vec = normalize(rev_cam_vec);
+					//鏡面反射光の輝度の計算
+					specular_ref = dot(reverse_vec, rev_cam_vec);
+					specular_ref = pow(clamp_double(specular_ref, 0.0, 1.0), SHINENESS);
+				}
+				color = calc_color(obj, env, dot_res, specular_ref);
+				color_set_to_pixel(mlx->img, x, y, make_trgb(0, color.x, color.y, color.z));
 			}
 			else
 			{
