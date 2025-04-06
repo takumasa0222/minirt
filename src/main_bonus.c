@@ -1,4 +1,7 @@
 #include "parser.h"
+#include "ui.h"
+#include "raytracing.h"
+#include "calc.h"
 
 bool check_filename(char *filename)
 {
@@ -21,6 +24,7 @@ int main(int argc, char **argv)
     parser(argv[1], part);
     env = set_get_env(GET, NULL);
     obj = set_get_obj(GET, NULL);
+	init_window(obj, env);
     // minirt(env, data);
     // minirt();
     free_lit(env->lit);

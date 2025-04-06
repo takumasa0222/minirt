@@ -182,40 +182,42 @@ double	clamp_double(double value, double min, double max)
 		return (value);
 }
 
-void	clamp_xyz(t_xyz *rgb, double dot_res)
+void	clamp_xyz(t_xyz *rgb, double min, double max)
 {
-	rgb->x = clamp(rgb->x * dot_res, 0, 255);
-	rgb->y = clamp(rgb->y * dot_res, 0, 255);
-	rgb->z = clamp(rgb->z * dot_res, 0, 255);
+	rgb->x = clamp(rgb->x, min, max);
+	rgb->y = clamp(rgb->y, min, max);
+	rgb->z = clamp(rgb->z, min, max);
 }
 
-t_xyz	calc_color(t_obj *obj, t_env *env, double diff_ref, double spec_ref)
+t_xyz	pls_shade(t_obj *obj, t_lit *lit, double diff_ref, double spec_ref)
 {
 	t_xyz	dif_col;
 	t_xyz	spec_col;
-	t_xyz	amb_col;
+	// t_xyz	amb_col;
 	t_xyz	ret_col;
 	t_xyz	lit_rgb;
 
-	lit_rgb = env->lit->rgb;
+	lit_rgb = lit->rgb;
 	lit_rgb = divid_v_f(lit_rgb, 255.0);
 	dif_col = multi_v_f(multi_v1_v2(obj->rgb, lit_rgb), diff_ref);
-	dif_col = multi_v_f(dif_col, env->lit->t);
+	dif_col = multi_v_f(dif_col, lit->t);
 	spec_col = multi_v_f(multi_v_f(lit_rgb, 255.0), spec_ref);
-	spec_col = multi_v_f(spec_col, env->lit->t);
-	// dif_col.x = obj->rgb.x * lit_rgb.x *diff_ref * env->lit->t;
-	// dif_col.y = obj->rgb.y * lit_rgb.y *diff_ref * env->lit->t;
-	// dif_col.z = obj->rgb.z * lit_rgb.z *diff_ref * env->lit->t;
-	// spec_col.x = 255.0 * lit_rgb.x *spec_ref * env->lit->t;
-	// spec_col.y = 255.0 * lit_rgb.y *spec_ref * env->lit->t;
-	// spec_col.z = 255.0 * lit_rgb.z *spec_ref * env->lit->t;
-	amb_col.x = obj->rgb.x * env->amb_rgb.x / 255.0 * env->amb_t;
-	amb_col.y = obj->rgb.y * env->amb_rgb.y / 255.0 * env->amb_t;
-	amb_col.z = obj->rgb.z * env->amb_rgb.z / 255.0 * env->amb_t;
-	ret_col.x = clamp(amb_col.x + dif_col.x + spec_col.x, 0, 255);
-	ret_col.y = clamp(amb_col.y + dif_col.y + spec_col.y, 0, 255);
-	ret_col.z = clamp(amb_col.z + dif_col.z + spec_col.z, 0, 255);
+	spec_col = multi_v_f(spec_col, lit->t);
+	// amb_col.x = obj->rgb.x * env->amb_rgb.x / 255.0 * env->amb_t;
+	// amb_col.y = obj->rgb.y * env->amb_rgb.y / 255.0 * env->amb_t;
+	// amb_col.z = obj->rgb.z * env->amb_rgb.z / 255.0 * env->amb_t;
+	// ret_col.x = clamp(dif_col.x + spec_col.x, 0, 255);
+	// ret_col.y = clamp(dif_col.y + spec_col.y, 0, 255);
+	// ret_col.z = clamp(dif_col.z + spec_col.z, 0, 255);
+	ret_col = plus_v1_v2(dif_col, spec_col);
 	return (ret_col);
+}
+
+void	pls_amb_color(t_obj *obj, t_env *env, t_xyz *col)
+{
+	col->x = obj->rgb.x * env->amb_rgb.x / 255.0 * env->amb_t;
+	col->y = obj->rgb.y * env->amb_rgb.y / 255.0 * env->amb_t;
+	col->z = obj->rgb.z * env->amb_rgb.z / 255.0 * env->amb_t;
 }
 
 
@@ -228,6 +230,7 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 	t_ray	cam_ray;
 
 	y = -1;
+	init_xyz(&color);
 	while (++y < W_HEIGHT)
 	{
 		x = -1;
@@ -249,28 +252,28 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 {
 	t_xyz		incident_dir;//光の入射ベクトル
-	//t_xyz		normal_dir;//法線ベクトル
-	//t_xyz		cross_vec;//球との交点ベクトル
 	t_hit_point	hit_obj;//交点情報を格納
 	int			i;
 	double		dot_res;
 	t_xyz 		reverse_vec;// 正反射ベクトル
 	t_xyz 		rev_cam_vec;// 視線の反対ベクトル
 	double		specular_ref;//鏡面反射光
+	t_lit		*tmp_lit;
 
 	i = hit_nearest_obj(obj, env, &cam_ray, &hit_obj.dist);
-	printf("i:%d, dist:%f\n", i, hit_obj.dist);
+	tmp_lit = env->lit;
 	dot_res = 0.0;
 	specular_ref = 0.0;
 	if (i >= 0)
 	{
-		while (env->lit)
+		pls_amb_color(obj, env, color);
+		while (tmp_lit)
 		{
 			// 交点の計算
 			hit_obj.pos =  plus_v1_v2(env->cam_xyz, multi_v_f(cam_ray.dir, hit_obj.dist));
 			// diffuse light の実装
 			// 正規化した入射ベクトル(交点から、光の位置)
-			incident_dir = minus_v1_v2(env->lit->xyz, hit_obj.pos);
+			incident_dir = minus_v1_v2(tmp_lit->xyz, hit_obj.pos);
 			incident_dir = normalize(incident_dir);
 			// 正規化した法線ベクトル(球の中心から、交点)
 			hit_obj.norm = minus_v1_v2(hit_obj.pos, obj->vector);
@@ -289,9 +292,10 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 				specular_ref = dot(reverse_vec, rev_cam_vec);
 				specular_ref = pow(clamp_double(specular_ref, 0.0, 1.0), SHINENESS);
 			}
-			*color = calc_color(obj, env, dot_res, specular_ref);
-			env->lit = NULL;
+			*color = plus_v1_v2(pls_shade(obj, tmp_lit, dot_res, specular_ref), *color);
+			tmp_lit = tmp_lit->next;
 		}
+		clamp_xyz(color, 0, 255);
 		return (1);
 	}
 	return (0);

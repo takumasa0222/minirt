@@ -48,7 +48,7 @@ bonus: $(NAME_B)
 $(NAME_B): $(OBJS_B) $(OBJS_P) $(OBJS_C)
 	@make -C ./mlx_linux
 	make -C ./src/libft
-	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(LIBFT)  -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_B)
+	$(CC) $(FLAGS) $(OBJS_B) $(OBJS_P) $(OBJS_C) $(LIBFT) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME_B)
 
 clean:
 	@make clean -C ./mlx_linux
