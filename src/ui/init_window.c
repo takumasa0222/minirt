@@ -112,43 +112,69 @@ double	hit_sphere(t_obj *obj, t_env *env, t_xyz cam_dir)
 		return (NO_HIT);
 	return (distance_sphere(abcd));
 }
+//ray : →p = →s + t→d
+//plane: (→p・→n)= 0
+// t = - (→s・→n) / (→d・→n) t> 0 のとき交点を持つ
+double	hit_plane(t_obj *obj, t_env *env, t_xyz cam_dir)
+{
+	t_xyz	p_norm;
+	double	numerator;
+	double	denominator;
+
+	p_norm = normalize(obj->vector);
+	denominator = dot(cam_dir, p_norm);
+	if (denominator)
+	{
+		numerator = -1 * dot(minus_v1_v2(env->cam_xyz, obj->xyz), p_norm);
+		if (!numerator)
+			return (-1);
+		return (numerator / denominator);
+	}
+	return (-1);
+}
 
 double	hit_cam_ray(t_obj *obj, t_env *env, t_xyz cam_dir)
 {
 	if (obj->id == SP)
+	{
+		// todo ここで、t の値が正である場合は、法線ベクトルを求める。
+		// 理由としては、法線ベクトルは object のかたちによって異なるため。
 		return (hit_sphere(obj, env, cam_dir));
-	//else if (obj->id == PL)
-	//	hit_plane(obj, env, cam_dir, hit_p);
+	}
+	else if (obj->id == PL)
+	{
+		return(hit_plane(obj, env, cam_dir));
+	}
 	//else if (obj->id == CY)
 	//	hit_cylindar();
 	return (NO_HIT);
 }
 // this funciton will return the index of object which is nearest
 // -1 means there is no object which camera ray hit
-int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *cam_ray, double *dist)
+int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *cam_ray, t_hit_point *hit_p)
 {
 	t_obj	*obj_cpy;
 	double	tmp;
 	int		i;
 	int		ret;
 
-	*dist = MAX_DIST + 1;
+	hit_p->dist = MAX_DIST + 1;
 	ret = -1;
 	i = 0;
 	obj_cpy = obj;
 	while (obj_cpy)
 	{
 		tmp = hit_cam_ray(obj_cpy, env, cam_ray->dir);
-		if (tmp > 0 && tmp < MAX_DIST && tmp < *dist)
+		if (tmp > 0 && tmp < MAX_DIST && tmp < hit_p->dist)
 		{
-			*dist = tmp;
+			hit_p->dist = tmp;
 			ret = i;
 		}
 		obj_cpy = obj_cpy->next;
 		i++;
 	}
-	if (*dist == MAX_DIST + 1)
-		*dist = -1;
+	if (hit_p->dist == MAX_DIST + 1)
+		hit_p->dist = -1;
 	return (ret);
 }
 
@@ -327,9 +353,14 @@ void	fill_hit_obj(t_obj *obj, t_env *env, t_ray cam_ray, t_hit_point *hit_obj)
 {
 	// 平面・球における交点
 	hit_obj->pos =  plus_v1_v2(env->cam_xyz, multi_v_f(cam_ray.dir, hit_obj->dist));
-	// 正規化した法線ベクトル(球の中心から、交点)
-	hit_obj->norm = minus_v1_v2(hit_obj->pos, obj->xyz);
-	hit_obj->norm = normalize(hit_obj->norm);
+	if (obj->id == SP)
+	{
+		// 正規化した法線ベクトル(球の中心から、交点)
+		hit_obj->norm = minus_v1_v2(hit_obj->pos, obj->xyz);
+		hit_obj->norm = normalize(hit_obj->norm);
+	}
+	else if (obj->id == PL)
+		hit_obj->norm = normalize(obj->vector);
 }
 
 int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
@@ -339,7 +370,7 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 	t_lit		*tmp_lit;
 	t_obj		cpy_obj;
 
-	i = hit_nearest_obj(obj, env, &cam_ray, &hit_obj.dist);
+	i = hit_nearest_obj(obj, env, &cam_ray, &hit_obj);
 	if (i < 0)
 		return (0);
 	cpy_obj = get_indexed_obj(i, obj);
