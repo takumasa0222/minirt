@@ -66,6 +66,9 @@ void	set_screen_vector(t_xyz *screen, int x, int y, double fov)
 	double	scale;
 
 	scale = tan((fov * 0.5) * M_PI / 180.0);
+	//printf("%f\n",scale);
+	//screen->x = convert_x_to_screen(x);
+	//screen->y = convert_y_to_screen(y);
 	screen->x = convert_x_to_screen(x) * scale;
 	screen->y = convert_y_to_screen(y) * scale;
 	screen->z = 0;
@@ -100,7 +103,7 @@ double	hit_sphere(t_obj *obj, t_env *env, t_xyz cam_dir)
 	double	radius;
 
 	radius = obj->diameter / 2.0;
-	camera_to_obj = minus_v1_v2(env->cam_xyz, obj->vector);
+	camera_to_obj = minus_v1_v2(env->cam_xyz, obj->xyz);
 	abcd[L_A] = squared_norm(&cam_dir);
 	abcd[L_B] = 2 * dot(cam_dir, camera_to_obj);
 	abcd[L_C] = squared_norm(&camera_to_obj) - radius * radius;
@@ -232,11 +235,13 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 
 	t_xyz forward = normalize(env->cam_vector);
 	t_xyz up = {0, 1, 0};
+	printf("obj xyz:%f, %f, %f,\n", obj->xyz.x, obj->xyz.y, obj->xyz.z);
+	printf("obj vector:%f, %f, %f,\n", obj->vector.x, obj->vector.y, obj->vector.z);
 
 	if (fabs(dot(forward, up)) > 0.999)
 		up = (t_xyz){1, 0, 0}; // forwardとupが平行なら代替
-	t_xyz right = normalize(cross(forward, up));
-	up = normalize(cross(right, forward)); 
+	t_xyz right = normalize(cross(up, forward));
+	up = cross(forward, right); 
 
 	y = -1;
 	init_xyz(&color);
@@ -254,10 +259,10 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 					),
 					forward
 				)
-			);
+			);			
 			// screen_point = plus_v1_v2(env->cam_xyz, (t_xyz){screen_vec.x, screen_vec.y, screen_vec.z});
 			cam_ray.pos = env->cam_xyz;
-			// cam_ray.dir = normalize(minus_v1_v2(screen_point, env->cam_xyz));
+			// cam_ray.dir = normalize(minus_v1_v2(screen_vec, env->cam_xyz));
 			cam_ray.dir = dir;
 
 			if (ray_tracing(obj, env, cam_ray, &color))
@@ -323,7 +328,7 @@ void	fill_hit_obj(t_obj *obj, t_env *env, t_ray cam_ray, t_hit_point *hit_obj)
 	// 平面・球における交点
 	hit_obj->pos =  plus_v1_v2(env->cam_xyz, multi_v_f(cam_ray.dir, hit_obj->dist));
 	// 正規化した法線ベクトル(球の中心から、交点)
-	hit_obj->norm = minus_v1_v2(hit_obj->pos, obj->vector);
+	hit_obj->norm = minus_v1_v2(hit_obj->pos, obj->xyz);
 	hit_obj->norm = normalize(hit_obj->norm);
 }
 
