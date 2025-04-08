@@ -5,9 +5,9 @@
 #include <mlx.h>
 #include <math.h>
 
-double squared_norm(t_xyz *v)
+double squared_norm(t_xyz v)
 {
-  return sqr(v->x) + sqr(v->y) + sqr(v->z);
+  return sqr(v.x) + sqr(v.y) + sqr(v.z);
 }
 
 int	init_window(t_obj *data, t_env *env)
@@ -104,9 +104,9 @@ double	hit_sphere(t_obj *obj, t_env *env, t_xyz cam_dir)
 
 	radius = obj->diameter / 2.0;
 	camera_to_obj = minus_v1_v2(env->cam_xyz, obj->xyz);
-	abcd[L_A] = squared_norm(&cam_dir);
+	abcd[L_A] = squared_norm(cam_dir);
 	abcd[L_B] = 2 * dot(cam_dir, camera_to_obj);
-	abcd[L_C] = squared_norm(&camera_to_obj) - radius * radius;
+	abcd[L_C] = squared_norm(camera_to_obj) - radius * radius;
 	abcd[L_D] = abcd[L_B] * abcd[L_B] - 4 * abcd[L_A] * abcd[L_C];
 	if (abcd[L_D] <= 0)
 		return (NO_HIT);
@@ -151,7 +151,7 @@ double	hit_cam_ray(t_obj *obj, t_env *env, t_xyz cam_dir)
 }
 // this funciton will return the index of object which is nearest
 // -1 means there is no object which camera ray hit
-int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *cam_ray, t_hit_point *hit_p)
+int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *ray, t_hit_point *hit_p)
 {
 	t_obj	*obj_cpy;
 	double	tmp;
@@ -164,7 +164,7 @@ int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *cam_ray, t_hit_point *hit_p)
 	obj_cpy = obj;
 	while (obj_cpy)
 	{
-		tmp = hit_cam_ray(obj_cpy, env, cam_ray->dir);
+		tmp = hit_cam_ray(obj_cpy, env, ray->dir);
 		if (tmp > 0 && tmp < MAX_DIST && tmp < hit_p->dist)
 		{
 			hit_p->dist = tmp;
@@ -176,6 +176,24 @@ int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *cam_ray, t_hit_point *hit_p)
 	if (hit_p->dist == MAX_DIST + 1)
 		hit_p->dist = -1;
 	return (ret);
+}
+
+// todo : 複数光源に対応するため、env ではだめ
+int	calc_shadow(t_obj *obj, t_env *env, t_ray *ray, t_hit_point *hit_p)
+{
+	t_ray	shadow_p;
+	t_xyz	incident_dir;
+	double	dist_shadow_to_lit;
+	double	ret;
+
+	incident_dir = minus_v1_v2(env->lit->xyz, hit_p->pos);
+	incident_dir = normalize(incident_dir);
+	shadow_p.pos = plus_v1_v2(hit_p->pos,  multi_v_f(incident_dir, EPSILON));
+	shadow_p.dir = incident_dir;
+	dist_shadow_to_lit = squared_norm(minus_v1_v2(env->lit->xyz, hit_p->pos));
+	ret = hit_nearest_obj(obj, env, &shadow_p, hit_p);
+	if (ret > 0)
+		
 }
 
 unsigned int	set_trgb(int t, int r, int g, int b)
@@ -247,6 +265,8 @@ void	pls_amb_color(t_obj *obj, t_env *env, t_xyz *col)
 	col->y = obj->rgb.y * env->amb_rgb.y / 255.0 * env->amb_t;
 	col->z = obj->rgb.z * env->amb_rgb.z / 255.0 * env->amb_t;
 }
+
+
 
 
 int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)

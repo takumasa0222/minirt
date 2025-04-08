@@ -1,10 +1,11 @@
 #ifndef RAYTRACING_H
 # define RAYTRACING_H
 
+#include "./parser.h"
 # define SHINENESS 16
 # define NO_HIT -99
 # define MAX_DIST 65535
-#include "./parser.h"
+# define EPSILON (1.0f/512)
 
 typedef enum e_letter {
 	L_A,
