@@ -68,7 +68,7 @@ void	set_screen_vector(t_xyz *screen, int x, int y, double fov)
 	scale = tan((fov * 0.5) * M_PI / 180.0);
 	screen->x = convert_x_to_screen(x) * scale;
 	screen->y = convert_y_to_screen(y) * scale;
-	screen->z = 1;
+	screen->z = 0;
 }
 
 double	distance_sphere(double *abcd)
@@ -144,6 +144,8 @@ int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *cam_ray, double *dist)
 		obj_cpy = obj_cpy->next;
 		i++;
 	}
+	if (*dist == MAX_DIST + 1)
+		*dist = -1;
 	return (ret);
 }
 
@@ -225,7 +227,16 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 	t_xyz	color;
 	t_xyz	screen_vec;
 	t_ray	cam_ray;
-	t_xyz screen_point;
+	// t_xyz screen_point;
+	t_xyz dir;
+
+	t_xyz forward = normalize(env->cam_vector);
+	t_xyz up = {0, 1, 0};
+
+	if (fabs(dot(forward, up)) > 0.999)
+		up = (t_xyz){1, 0, 0}; // forwardとupが平行なら代替
+	t_xyz right = normalize(cross(forward, up));
+	up = normalize(cross(right, forward)); 
 
 	y = -1;
 	init_xyz(&color);
@@ -235,9 +246,20 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 		while (++x < W_WIDTH)
 		{	
 			set_screen_vector(&screen_vec, x, y, env->cam_degree);
-			screen_point = plus_v1_v2(env->cam_xyz, (t_xyz){screen_vec.x, screen_vec.y, screen_vec.z});
+			dir = normalize(
+				plus_v1_v2(
+					plus_v1_v2(
+						multi_v_f(right, screen_vec.x),
+						multi_v_f(up, screen_vec.y)
+					),
+					forward
+				)
+			);
+			// screen_point = plus_v1_v2(env->cam_xyz, (t_xyz){screen_vec.x, screen_vec.y, screen_vec.z});
 			cam_ray.pos = env->cam_xyz;
-			cam_ray.dir = normalize(minus_v1_v2(screen_point, env->cam_xyz));
+			// cam_ray.dir = normalize(minus_v1_v2(screen_point, env->cam_xyz));
+			cam_ray.dir = dir;
+
 			if (ray_tracing(obj, env, cam_ray, &color))
 				color_set_to_pixel(mlx->img, x, y, make_trgb(0, color.x, color.y, color.z));
 			else
@@ -313,6 +335,8 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 	t_obj		cpy_obj;
 
 	i = hit_nearest_obj(obj, env, &cam_ray, &hit_obj.dist);
+	if (i < 0)
+		return (0);
 	cpy_obj = get_indexed_obj(i, obj);
 	fill_hit_obj(&cpy_obj, env, cam_ray, &hit_obj);
 	tmp_lit = env->lit;
