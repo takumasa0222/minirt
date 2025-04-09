@@ -3,13 +3,26 @@
 #include "raytracing.h"
 #include "calc.h"
 
-bool check_filename(char *filename)
+void check_argv(int argc, char **argv)
 {
+    char    *filename;
+
+    if (argc != 2)
+        print_error_and_exit("main", "1 argument required");
+    filename = argv[1];
+    while (filename)
+    {
+        if (ft_memcmp(filename, "./", 2) == 0)
+        filename += 2;
+        else if (ft_memcmp(filename, "../", 3) == 0)
+        filename += 3;
+        else
+        break;
+    }
     while (*filename != '.')
-        filename++;
+    filename++;
     if (ft_memcmp(filename, ".rt", 4))
-        return (false);
-    return (true);
+        print_error_and_exit("main", "*.rt file required");
 }
 
 int main(int argc, char **argv)
@@ -18,8 +31,7 @@ int main(int argc, char **argv)
     t_env   *env;
     t_obj   *obj;
 
-    if (argc != 2 || check_filename(argv[1]) == false)
-        print_error_and_exit("main", "*.rt file required");
+    check_argv(argc, argv);
     part = BONUS;
     parser(argv[1], part);
     env = set_get_env(GET, NULL);
