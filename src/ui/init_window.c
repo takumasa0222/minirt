@@ -216,6 +216,7 @@ int	hit_nearest_obj_shadow(t_obj *obj, t_xyz shadow_pos, t_ray *shadow_ray, t_hi
 	return (ret);
 }
 
+
 // todo : 複数光源に対応するため、env ではだめ
 int	calc_shadow(t_obj *obj, t_env *env, t_hit_point *hit_p)
 {
@@ -232,8 +233,7 @@ int	calc_shadow(t_obj *obj, t_env *env, t_hit_point *hit_p)
 	shadow_p.dir = incident_dir;
 	dist_shadow_to_lit = distance_between(env->lit->xyz, hit_p->pos);
 	ret = hit_nearest_obj_shadow(obj, shadow_p.pos, &shadow_p, &tmp_hit);
-	//printf("tmp_hit.dist: %f, dist_shadow_to_lit:%f\n",tmp_hit.dist * tmp_hit.dist, dist_shadow_to_lit);
-	if (ret != -1 && tmp_hit.dist < dist_shadow_to_lit - EPSILON)
+	if (ret != -1 && tmp_hit.dist > EPSILON && tmp_hit.dist < dist_shadow_to_lit - EPSILON)
 	{
 		//printf("cominghere asd\n");
 		return (RENDERED_SHADOW);
