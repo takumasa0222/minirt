@@ -42,7 +42,7 @@ void    make_information(char *line)
     char    **split;
 
     split = ft_split(line, SPACE);
-    if (!split[0])
+    if (!split[0] || split[0][0] == '#')
     {
         free(split[0]);
         free(split);
