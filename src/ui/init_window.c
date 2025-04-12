@@ -5,9 +5,17 @@
 #include <mlx.h>
 #include <math.h>
 
+
+
 double squared_norm(t_xyz v)
 {
   return sqr(v.x) + sqr(v.y) + sqr(v.z);
+}
+
+double distance_between(t_xyz a, t_xyz b)
+{
+	t_xyz diff = minus_v1_v2(a, b);
+	return sqrt(squared_norm(diff));
 }
 
 int	init_window(t_obj *data, t_env *env)
@@ -96,17 +104,17 @@ double	distance_sphere(double *abcd)
 }
 
 // check if cam_ray is hitting to sphere and return distance
-double	hit_sphere(t_obj *obj, t_env *env, t_xyz cam_dir)
+double	hit_sphere(t_obj *obj, t_xyz pos, t_xyz cam_dir)
 {
-	t_xyz	camera_to_obj;
+	t_xyz	ray_to_obj;
 	double	abcd[4];
 	double	radius;
 
 	radius = obj->diameter / 2.0;
-	camera_to_obj = minus_v1_v2(env->cam_xyz, obj->xyz);
+	ray_to_obj = minus_v1_v2(pos, obj->xyz);
 	abcd[L_A] = squared_norm(cam_dir);
-	abcd[L_B] = 2 * dot(cam_dir, camera_to_obj);
-	abcd[L_C] = squared_norm(camera_to_obj) - radius * radius;
+	abcd[L_B] = 2 * dot(cam_dir, ray_to_obj);
+	abcd[L_C] = squared_norm(ray_to_obj) - radius * radius;
 	abcd[L_D] = abcd[L_B] * abcd[L_B] - 4 * abcd[L_A] * abcd[L_C];
 	if (abcd[L_D] <= 0)
 		return (NO_HIT);
@@ -115,7 +123,7 @@ double	hit_sphere(t_obj *obj, t_env *env, t_xyz cam_dir)
 //ray : →p = →s + t→d
 //plane: (→p・→n)= 0
 // t = - (→s・→n) / (→d・→n) t> 0 のとき交点を持つ
-double	hit_plane(t_obj *obj, t_env *env, t_xyz cam_dir)
+double	hit_plane(t_obj *obj, t_xyz pos, t_xyz cam_dir)
 {
 	t_xyz	p_norm;
 	double	numerator;
@@ -125,7 +133,7 @@ double	hit_plane(t_obj *obj, t_env *env, t_xyz cam_dir)
 	denominator = dot(cam_dir, p_norm);
 	if (denominator)
 	{
-		numerator = -1 * dot(minus_v1_v2(env->cam_xyz, obj->xyz), p_norm);
+		numerator = -1 * dot(minus_v1_v2(pos, obj->xyz), p_norm);
 		if (!numerator)
 			return (-1);
 		return (numerator / denominator);
@@ -133,17 +141,17 @@ double	hit_plane(t_obj *obj, t_env *env, t_xyz cam_dir)
 	return (-1);
 }
 
-double	hit_cam_ray(t_obj *obj, t_env *env, t_xyz cam_dir)
+double	hit_cam_ray(t_obj *obj, t_xyz pos, t_xyz cam_dir)
 {
 	if (obj->id == SP)
 	{
 		// todo ここで、t の値が正である場合は、法線ベクトルを求める。
 		// 理由としては、法線ベクトルは object のかたちによって異なるため。
-		return (hit_sphere(obj, env, cam_dir));
+		return (hit_sphere(obj, pos, cam_dir));
 	}
 	else if (obj->id == PL)
 	{
-		return(hit_plane(obj, env, cam_dir));
+		return(hit_plane(obj, pos, cam_dir));
 	}
 	//else if (obj->id == CY)
 	//	hit_cylindar();
@@ -151,7 +159,7 @@ double	hit_cam_ray(t_obj *obj, t_env *env, t_xyz cam_dir)
 }
 // this funciton will return the index of object which is nearest
 // -1 means there is no object which camera ray hit
-int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *ray, t_hit_point *hit_p)
+int	hit_nearest_obj(t_obj *obj, t_xyz pos, t_ray *ray, t_hit_point *hit_p)
 {
 	t_obj	*obj_cpy;
 	double	tmp;
@@ -164,7 +172,7 @@ int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *ray, t_hit_point *hit_p)
 	obj_cpy = obj;
 	while (obj_cpy)
 	{
-		tmp = hit_cam_ray(obj_cpy, env, ray->dir);
+		tmp = hit_cam_ray(obj_cpy, pos, ray->dir);
 		if (tmp > 0 && tmp < MAX_DIST && tmp < hit_p->dist)
 		{
 			hit_p->dist = tmp;
@@ -177,30 +185,66 @@ int	hit_nearest_obj(t_obj *obj, t_env *env, t_ray *ray, t_hit_point *hit_p)
 		hit_p->dist = -1;
 	return (ret);
 }
+int	hit_nearest_obj_shadow(t_obj *obj, t_xyz shadow_pos, t_ray *shadow_ray, t_hit_point *hit_p)
+{
+	t_obj	*obj_cpy;
+	double	tmp;
+	int		i;
+	int		ret;
+
+	ret = -1;
+	i = 0;
+	obj_cpy = obj;
+	while (obj_cpy)
+	{		
+		if (hit_p->index == i)
+		{
+			obj_cpy = obj_cpy->next;
+			i++;
+			continue ;
+		}
+		tmp = hit_cam_ray(obj_cpy, shadow_pos, shadow_ray->dir);
+		if (tmp > EPSILON && tmp < MAX_DIST && tmp < hit_p->dist)
+		{
+			hit_p->dist = tmp;
+			ret = i;
+			return (ret);
+		}
+		obj_cpy = obj_cpy->next;
+		i++;
+	}
+	return (ret);
+}
 
 // todo : 複数光源に対応するため、env ではだめ
-int	calc_shadow(t_obj *obj, t_env *env, t_ray *ray, t_hit_point *hit_p)
+int	calc_shadow(t_obj *obj, t_env *env, t_hit_point *hit_p)
 {
-	t_ray	shadow_p;
-	t_xyz	incident_dir;
-	double	dist_shadow_to_lit;
-	double	ret;
+	t_ray		shadow_p;
+	t_xyz		incident_dir;
+	double		dist_shadow_to_lit;
+	double		ret;
+	t_hit_point	tmp_hit;
 
 	incident_dir = minus_v1_v2(env->lit->xyz, hit_p->pos);
 	incident_dir = normalize(incident_dir);
+	tmp_hit = *hit_p;
 	shadow_p.pos = plus_v1_v2(hit_p->pos,  multi_v_f(incident_dir, EPSILON));
 	shadow_p.dir = incident_dir;
-	dist_shadow_to_lit = squared_norm(minus_v1_v2(env->lit->xyz, hit_p->pos));
-	ret = hit_nearest_obj(obj, env, &shadow_p, hit_p);
-	if (ret > 0)
-		
+	dist_shadow_to_lit = distance_between(env->lit->xyz, hit_p->pos);
+	ret = hit_nearest_obj_shadow(obj, shadow_p.pos, &shadow_p, &tmp_hit);
+	//printf("tmp_hit.dist: %f, dist_shadow_to_lit:%f\n",tmp_hit.dist * tmp_hit.dist, dist_shadow_to_lit);
+	if (ret != -1 && tmp_hit.dist < dist_shadow_to_lit - EPSILON)
+	{
+		//printf("cominghere asd\n");
+		return (RENDERED_SHADOW);
+	}
+	return (NOT_RENDERED_SHADOW);
 }
 
 unsigned int	set_trgb(int t, int r, int g, int b)
 {
 	return (t << 24 | r << 16 | g << 8 | b);
 }
-
 
 void	color_set_to_pixel(t_meta_img *img, int x, int y, unsigned int color)
 {
@@ -261,9 +305,16 @@ t_xyz	pls_shade(t_obj *obj, t_lit *lit, double diff_ref, double spec_ref)
 
 void	pls_amb_color(t_obj *obj, t_env *env, t_xyz *col)
 {
-	col->x = obj->rgb.x * env->amb_rgb.x / 255.0 * env->amb_t;
-	col->y = obj->rgb.y * env->amb_rgb.y / 255.0 * env->amb_t;
-	col->z = obj->rgb.z * env->amb_rgb.z / 255.0 * env->amb_t;
+	//printf("x%f\n",obj->rgb.x);
+	//printf("y%f\n",obj->rgb.y);
+	//printf("z%f\n",obj->rgb.z);
+	//printf("type %d\n",obj->id);
+	col->x = obj->rgb.x * (env->amb_rgb.x / 255.0) * env->amb_t;
+	col->y = obj->rgb.y * (env->amb_rgb.y / 255.0) * env->amb_t;
+	col->z = obj->rgb.z * (env->amb_rgb.z / 255.0) * env->amb_t;
+	//printf("x%f\n",col->x);
+	//printf("y%f\n",col->y);
+	//printf("z%f\n",col->z);
 }
 
 
@@ -281,8 +332,8 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 
 	t_xyz forward = normalize(env->cam_vector);
 	t_xyz up = {0, 1, 0};
-	printf("obj xyz:%f, %f, %f,\n", obj->xyz.x, obj->xyz.y, obj->xyz.z);
-	printf("obj vector:%f, %f, %f,\n", obj->vector.x, obj->vector.y, obj->vector.z);
+	//printf("obj xyz:%f, %f, %f,\n", obj->xyz.x, obj->xyz.y, obj->xyz.z);
+	//printf("obj vector:%f, %f, %f,\n", obj->vector.x, obj->vector.y, obj->vector.z);
 
 	if (fabs(dot(forward, up)) > 0.999)
 		up = (t_xyz){1, 0, 0}; // forwardとupが平行なら代替
@@ -311,10 +362,10 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 			// cam_ray.dir = normalize(minus_v1_v2(screen_vec, env->cam_xyz));
 			cam_ray.dir = dir;
 
-			if (ray_tracing(obj, env, cam_ray, &color))
+			ray_tracing(obj, env, cam_ray, &color);
 				color_set_to_pixel(mlx->img, x, y, make_trgb(0, color.x, color.y, color.z));
-			else
-				color_set_to_pixel(mlx->img, x, y, rgb_to_int(100,149,237));
+			//else
+			//	color_set_to_pixel(mlx->img, x, y, rgb_to_int(100,149,237));
 		}
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img->img, 0, 0);
@@ -383,25 +434,38 @@ void	fill_hit_obj(t_obj *obj, t_env *env, t_ray cam_ray, t_hit_point *hit_obj)
 		hit_obj->norm = normalize(obj->vector);
 }
 
+int	set_amb_col(t_xyz *color,t_env *env)
+{
+	color->x = (env->amb_rgb.x / 255.0) * env->amb_t;
+	color->y =  (env->amb_rgb.y / 255.0) * env->amb_t;
+	color->z = (env->amb_rgb.z / 255.0) * env->amb_t;
+	return (0);
+}
+
 int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 {
 	t_hit_point	hit_obj;//交点情報を格納
-	int			i;
 	t_lit		*tmp_lit;
 	t_obj		cpy_obj;
 
-	i = hit_nearest_obj(obj, env, &cam_ray, &hit_obj);
-	if (i < 0)
+	hit_obj.index = hit_nearest_obj(obj, env->cam_xyz, &cam_ray, &hit_obj);
+	if (hit_obj.index < 0)
+	{
+		set_amb_col(color,env);
 		return (0);
-	cpy_obj = get_indexed_obj(i, obj);
+	}
+	cpy_obj = get_indexed_obj(hit_obj.index, obj);
 	fill_hit_obj(&cpy_obj, env, cam_ray, &hit_obj);
 	tmp_lit = env->lit;
-	if (i >= 0)
+	if (hit_obj.index >= 0)
 	{
 		pls_amb_color(&cpy_obj, env, color);
 		while (tmp_lit)
 		{
-			*color = plus_v1_v2(calc_shade(&cpy_obj, tmp_lit, hit_obj, cam_ray), *color);
+			if (calc_shadow(obj, env, &hit_obj) ==  NOT_RENDERED_SHADOW)
+				*color = plus_v1_v2(calc_shade(&cpy_obj, tmp_lit, hit_obj, cam_ray), *color);
+			else
+				set_amb_col(color, env);
 			tmp_lit = tmp_lit->next;
 		}
 		clamp_xyz(color, 0, 255);
