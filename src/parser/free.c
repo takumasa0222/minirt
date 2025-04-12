@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-04-12 05:15:54 by yotsurud          #+#    #+#             */
+/*   Updated: 2025/04/12 15:28:38 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 void	free_split(char **split)
 {
-    int i;
+	int	i;
 
-    i = -1;
+	i = -1;
 	if (split)
 	{
 		while (split[++i])
-			free(split[i]);	
+			free(split[i]);
 	}
 	if (split)
 		free(split);
