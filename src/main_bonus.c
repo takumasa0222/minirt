@@ -1,47 +1,56 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-04-12 06:37:19 by yotsurud          #+#    #+#             */
+/*   Updated: 2025-04-12 06:37:19 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 #include "ui.h"
 #include "raytracing.h"
 #include "calc.h"
 
-void check_argv(int argc, char **argv)
+void	check_argv(int argc, char **argv)
 {
-    char    *filename;
+	char	*filename;
 
-    if (argc != 2)
-        print_error_and_exit("main", "1 argument required");
-    filename = argv[1];
-    while (filename)
-    {
-        if (ft_memcmp(filename, "./", 2) == 0)
-        filename += 2;
-        else if (ft_memcmp(filename, "../", 3) == 0)
-        filename += 3;
-        else
-        break;
-    }
-    while (*filename != '.')
-    filename++;
-    if (ft_memcmp(filename, ".rt", 4))
-        print_error_and_exit("main", "*.rt file required");
+	if (argc != 2)
+		print_error_and_exit("main", "1 argument required");
+	filename = argv[1];
+	while (filename)
+	{
+		if (ft_memcmp(filename, "./", 2) == 0)
+			filename += 2;
+		else if (ft_memcmp(filename, "../", 3) == 0)
+			filename += 3;
+		else
+			break ;
+	}
+	while (*filename != '.')
+		filename++;
+	if (ft_memcmp(filename, ".rt", 4))
+		print_error_and_exit("main", "*.rt file required");
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    int     part;
-    t_env   *env;
-    t_obj   *obj;
+	int		part;
+	t_env	*env;
+	t_obj	*obj;
 
-    check_argv(argc, argv);
-    part = BONUS;
-    parser(argv[1], part);
-    env = set_get_env(GET, NULL);
-    obj = set_get_obj(GET, NULL);
+	check_argv(argc, argv);
+	part = BONUS;
+	parser(argv[1], part);
+	env = set_get_env(GET, NULL);
+	obj = set_get_obj(GET, NULL);
 	init_window(obj, env);
-    // minirt(env, data);
-    // minirt();
-    free_lit(env->lit);
-    free(env);
-    free_obj(obj);
-    printf("end\n");
-    return (0);
+	free_lit(env->lit);
+	free(env);
+	free_obj(obj);
+	return (0);
 }
