@@ -5,7 +5,9 @@
 # define SHINENESS 16
 # define NO_HIT -99
 # define MAX_DIST 65535
-# define EPSILON (1.0f/512)
+# define EPSILON (1.0f/128)
+# define RENDERED_SHADOW 0
+# define NOT_RENDERED_SHADOW 1
 
 typedef enum e_letter {
 	L_A,
@@ -26,6 +28,7 @@ typedef struct s_hit_point
 	double	dist;
 	t_xyz	pos;
 	t_xyz	norm;
+	int		index;
 }	t_hit_point;
 
 int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color);
