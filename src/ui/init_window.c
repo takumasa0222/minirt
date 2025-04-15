@@ -208,16 +208,30 @@ int	hit_nearest_obj_shadow(t_obj *obj, t_xyz shadow_pos, t_ray *shadow_ray, t_hi
 		{
 			hit_p->dist = tmp;
 			ret = i;
-			return (ret);
 		}
 		obj_cpy = obj_cpy->next;
 		i++;
 	}
 	return (ret);
 }
+t_obj	get_indexed_obj(int index, t_obj *obj)
+{
+	t_obj	*ret;
+	int		j;
 
+	ret = obj;
+	if (!obj)
+		print_error_and_exit("get_indexed_obj", "obj is null");
+	if (index < 0)
+		return (*obj);
+	j = -1;
+	while (ret && ++j != index)
+		ret = ret->next;
+	return (*ret);
+}
 
 // todo : 複数光源に対応するため、env ではだめ
+// need to fix: シャドウレイとの間にある物体の中で光源に最も近い物体が平面である場合、すべて環境光のみとなる
 int	calc_shadow(t_obj *obj, t_env *env, t_hit_point *hit_p)
 {
 	t_ray		shadow_p;
@@ -235,9 +249,16 @@ int	calc_shadow(t_obj *obj, t_env *env, t_hit_point *hit_p)
 	ret = hit_nearest_obj_shadow(obj, shadow_p.pos, &shadow_p, &tmp_hit);
 	if (ret != -1 && tmp_hit.dist > EPSILON && tmp_hit.dist < dist_shadow_to_lit - EPSILON)
 	{
-		//printf("cominghere asd\n");
+		t_obj obj_hit = get_indexed_obj(ret, obj);
+		if (obj_hit.id == PL)
+		{
+			//double dot_nl = dot(obj_hit.vector, incident_dir);
+			//if (dot_nl < 0)
+				return (NO_LIGHT); // 裏側に当たってるので影じゃない
+		}
 		return (RENDERED_SHADOW);
 	}
+	//printf(  tmp_hit.dist);
 	return (NOT_RENDERED_SHADOW);
 }
 
@@ -369,6 +390,7 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 		}
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img->img, 0, 0);
+	mlx_destroy_image(mlx->mlx, mlx->img->img);
 	return (EXIT_SUCCESS);
 }
 
@@ -404,21 +426,6 @@ t_xyz	calc_shade(t_obj *obj, t_lit *lit, t_hit_point hit_obj, t_ray cam_ray)
 	return (pls_shade(obj, lit, dot_res, specular_ref));
 }
 
-t_obj	get_indexed_obj(int index, t_obj *obj)
-{
-	t_obj	*ret;
-	int		j;
-
-	ret = obj;
-	if (!obj)
-		print_error_and_exit("get_indexed_obj", "obj is null");
-	if (index < 0)
-		return (*obj);
-	j = -1;
-	while (ret && ++j != index)
-		ret = ret->next;
-	return (*ret);
-}
 
 void	fill_hit_obj(t_obj *obj, t_env *env, t_ray cam_ray, t_hit_point *hit_obj)
 {
@@ -447,11 +454,12 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 	t_hit_point	hit_obj;//交点情報を格納
 	t_lit		*tmp_lit;
 	t_obj		cpy_obj;
+	int			ret;
 
 	hit_obj.index = hit_nearest_obj(obj, env->cam_xyz, &cam_ray, &hit_obj);
 	if (hit_obj.index < 0)
 	{
-		set_amb_col(color,env);
+		set_amb_col(color, env);
 		return (0);
 	}
 	cpy_obj = get_indexed_obj(hit_obj.index, obj);
@@ -459,12 +467,15 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 	tmp_lit = env->lit;
 	if (hit_obj.index >= 0)
 	{
-		pls_amb_color(&cpy_obj, env, color);
 		while (tmp_lit)
 		{
-			if (calc_shadow(obj, env, &hit_obj) ==  NOT_RENDERED_SHADOW)
+			ret = calc_shadow(obj, env, &hit_obj);
+			pls_amb_color(&cpy_obj, env, color);
+			if (ret ==  NOT_RENDERED_SHADOW)
+			{
 				*color = plus_v1_v2(calc_shade(&cpy_obj, tmp_lit, hit_obj, cam_ray), *color);
-			else
+			}
+			else if (ret == RENDERED_SHADOW)
 				set_amb_col(color, env);
 			tmp_lit = tmp_lit->next;
 		}

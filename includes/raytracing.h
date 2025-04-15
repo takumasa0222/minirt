@@ -8,6 +8,7 @@
 # define EPSILON (1.0f/128)
 # define RENDERED_SHADOW 0
 # define NOT_RENDERED_SHADOW 1
+# define NO_LIGHT 2
 
 typedef enum e_letter {
 	L_A,
