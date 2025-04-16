@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-04-12 05:19:44 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/04/12 14:50:18 by yotsurud         ###   ########.fr       */
+/*   Created: 2025/04/12 05:19:44 by yotsurud          #+#    #+#             */
+/*   Updated: 2025/04/16 09:57:01 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	init_lit(t_lit *lit)
 	init_xyz(&lit->xyz);
 	lit->t = 0;
 	init_xyz(&lit->rgb);
+	lit->flag = true;
 	lit->next = NULL;
 }
 
