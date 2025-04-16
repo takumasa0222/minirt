@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 06:06:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/04/16 09:56:36 by tsururukako      ###   ########.fr       */
+/*   Updated: 2025/04/17 01:09:04 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_lit
 	t_xyz			xyz;
 	double			t;
 	t_xyz			rgb;
-	bool			flag;
+	bool			valid_flag;
 	struct s_lit	*next;
 }	t_lit;
 

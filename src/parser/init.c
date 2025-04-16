@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 05:19:44 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/04/16 09:57:01 by tsururukako      ###   ########.fr       */
+/*   Updated: 2025/04/17 01:09:31 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	init_lit(t_lit *lit)
 	init_xyz(&lit->xyz);
 	lit->t = 0;
 	init_xyz(&lit->rgb);
-	lit->flag = true;
+	lit->valid_flag = true;
 	lit->next = NULL;
 }
 
