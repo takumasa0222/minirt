@@ -340,8 +340,11 @@ void	check_light_and_cam_pos(t_obj *obj, t_lit *lit, t_ray cam_ray)
 	norm_p = normalize(obj->vector);
 	dot_n_light = dot(norm_p, minus_v1_v2(lit->xyz, obj->xyz));
 	dot_n_camera = dot(norm_p, minus_v1_v2(cam_ray.pos, obj->xyz));
-	if ((dot_n_light > 0 && dot_n_camera > 0) || (dot_n_light < 0 && dot_n_camera < 0))
-		lit->
+	if ((dot_n_light > 0 && dot_n_camera > 0) \
+	|| (dot_n_light < 0 && dot_n_camera < 0))
+		lit->valid_flag = true;
+	else
+		lit->valid_flag = false;
 }
 
 void	check_light_pos(t_obj *obj, t_env *env, t_ray cam_ray)
@@ -356,9 +359,7 @@ void	check_light_pos(t_obj *obj, t_env *env, t_ray cam_ray)
 		while (obj_cpy)
 		{
 			if (obj_cpy->id == PL)
-			{
 				check_light_and_cam_pos(obj_cpy, lit_cpy, cam_ray);
-			}
 			obj_cpy = obj_cpy->next;
 		}
 		lit_cpy = lit_cpy->next;
@@ -488,10 +489,10 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 	tmp_lit = env->lit;
 	if (hit_obj.index >= 0)
 	{
-		while (tmp_lit)
+		pls_amb_color(&cpy_obj, env, color);
+		while (tmp_lit && tmp_lit->valid_flag)
 		{
 			ret = calc_shadow(obj, env, &hit_obj);
-			pls_amb_color(&cpy_obj, env, color);
 			if (ret ==  NOT_RENDERED_SHADOW)
 			{
 				*color = plus_v1_v2(calc_shade(&cpy_obj, tmp_lit, hit_obj, cam_ray), *color);
