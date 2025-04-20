@@ -32,6 +32,21 @@ typedef struct s_hit_point
 	int		index;
 }	t_hit_point;
 
-int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color);
+int		ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color);
 t_xyz	pls_shade(t_obj *obj, t_lit *lit, double diff_ref, double spec_ref);
+
+double	convert_x_to_screen(int x);
+double	convert_y_to_screen(int y);
+void	set_screen_vector(t_xyz *screen, int x, int y, double fov);
+
+double	hit_sphere(t_obj *obj, t_ray *ray);
+double	hit_plane(t_obj *obj, t_ray *ray);
+double	hit_cylinder(t_obj *obj, t_ray *ray);
+double	hit_cam_ray(t_obj *obj, t_ray *ray);
+
+double	distance_sphere(double *abcd);
+double	dist_cylndr(double *abcd, t_obj *obj, t_ray *ray);
+double	hit_cylinder_caps(t_obj *obj, t_ray *ray, t_xyz norm_c);
+double	get_nearest_inter_cy(t_obj *obj, t_xyz *h_pos, double *t, t_xyz norm_c);
+
 #endif
