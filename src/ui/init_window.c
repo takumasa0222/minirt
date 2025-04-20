@@ -326,20 +326,44 @@ t_xyz	pls_shade(t_obj *obj, t_lit *lit, double diff_ref, double spec_ref)
 
 void	pls_amb_color(t_obj *obj, t_env *env, t_xyz *col)
 {
-	//printf("x%f\n",obj->rgb.x);
-	//printf("y%f\n",obj->rgb.y);
-	//printf("z%f\n",obj->rgb.z);
-	//printf("type %d\n",obj->id);
 	col->x = obj->rgb.x * (env->amb_rgb.x / 255.0) * env->amb_t;
 	col->y = obj->rgb.y * (env->amb_rgb.y / 255.0) * env->amb_t;
 	col->z = obj->rgb.z * (env->amb_rgb.z / 255.0) * env->amb_t;
-	//printf("x%f\n",col->x);
-	//printf("y%f\n",col->y);
-	//printf("z%f\n",col->z);
 }
 
+void	check_light_and_cam_pos(t_obj *obj, t_lit *lit, t_ray cam_ray)
+{
+	double	dot_n_light;
+	double	dot_n_camera;
+	t_xyz	norm_p;
 
+	norm_p = normalize(obj->vector);
+	dot_n_light = dot(norm_p, minus_v1_v2(lit->xyz, obj->xyz));
+	dot_n_camera = dot(norm_p, minus_v1_v2(cam_ray.pos, obj->xyz));
+	if ((dot_n_light > 0 && dot_n_camera > 0) || (dot_n_light < 0 && dot_n_camera < 0))
+		lit->
+}
 
+void	check_light_pos(t_obj *obj, t_env *env, t_ray cam_ray)
+{
+	t_obj	*obj_cpy;
+	t_lit	*lit_cpy;
+
+	lit_cpy = env->lit;
+	while (lit_cpy)
+	{
+		obj_cpy = obj;
+		while (obj_cpy)
+		{
+			if (obj_cpy->id == PL)
+			{
+				check_light_and_cam_pos(obj_cpy, lit_cpy, cam_ray);
+			}
+			obj_cpy = obj_cpy->next;
+		}
+		lit_cpy = lit_cpy->next;
+	}
+}
 
 int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 {
@@ -353,8 +377,6 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 
 	t_xyz forward = normalize(env->cam_vector);
 	t_xyz up = {0, 1, 0};
-	//printf("obj xyz:%f, %f, %f,\n", obj->xyz.x, obj->xyz.y, obj->xyz.z);
-	//printf("obj vector:%f, %f, %f,\n", obj->vector.x, obj->vector.y, obj->vector.z);
 
 	if (fabs(dot(forward, up)) > 0.999)
 		up = (t_xyz){1, 0, 0}; // forwardとupが平行なら代替
@@ -382,11 +404,10 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 			cam_ray.pos = env->cam_xyz;
 			// cam_ray.dir = normalize(minus_v1_v2(screen_vec, env->cam_xyz));
 			cam_ray.dir = dir;
+			check_light_pos(obj, env, cam_ray);
 
 			ray_tracing(obj, env, cam_ray, &color);
 				color_set_to_pixel(mlx->img, x, y, make_trgb(0, color.x, color.y, color.z));
-			//else
-			//	color_set_to_pixel(mlx->img, x, y, rgb_to_int(100,149,237));
 		}
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img->img, 0, 0);
