@@ -12,6 +12,8 @@
 		"tuple": "c",
 		"type_traits": "c",
 		"utility": "c",
-		"cmath": "c"
+		"cmath": "c",
+		"vector": "c",
+		"calc.h": "c"
 	}
 }

@@ -54,8 +54,7 @@ void	make_information(char *line)
 	split = ft_split(line, SPACE);
 	if (!split[0] || split[0][0] == '#')
 	{
-		free(split[0]);
-		free(split);
+		free_split(split);
 		return ;
 	}
 	if (check_first_element(split[0]) == ENV)

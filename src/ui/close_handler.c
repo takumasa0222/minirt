@@ -7,6 +7,7 @@ int	close_btn_click(t_mlx_env *mlx)
 {
 	t_env	*env;
 	t_obj	*obj;
+	
 	if (mlx->img)
 		free(mlx->img);
 	mlx_destroy_window(mlx->mlx, mlx->window);
