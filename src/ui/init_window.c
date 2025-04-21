@@ -369,6 +369,7 @@ int	render_scene(t_mlx_env *mlx, t_obj *obj, t_env *env)
 		}
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->window, mlx->img->img, 0, 0);
+	mlx_destroy_image(mlx->mlx, mlx->img->img);
 	return (EXIT_SUCCESS);
 }
 
