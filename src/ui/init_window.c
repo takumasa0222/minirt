@@ -4,6 +4,7 @@
 #include "../../includes/calc.h"
 #include <mlx.h>
 #include <math.h>
+#include <X11/keysym.h>
 
 
 
@@ -18,16 +19,24 @@ double distance_between(t_xyz a, t_xyz b)
 	return sqrt(squared_norm(diff));
 }
 
-int	init_window(t_obj *data, t_env *env)
+int    key_handler(int keycode, t_mlx_env *mlx)
 {
-	t_mlx_env	mlx;
+    if (keycode == XK_Escape)
+        close_btn_click(mlx);
+    return (0);
+}
 
-	mlx.mlx = mlx_init();
-	mlx.window = mlx_new_window(mlx.mlx, W_WIDTH, W_HEIGHT, WIN_TITLE);
-	render_window(&mlx, data, env);
-	mlx_hook(mlx.window, DESTROY_NOTIFY, 0, close_btn_click, &mlx);
-	mlx_loop(mlx.mlx);
-	return (EXIT_SUCCESS);
+int    init_window(t_obj *data, t_env *env)
+{
+    t_mlx_env    mlx;
+
+    mlx.mlx = mlx_init();
+    mlx.window = mlx_new_window(mlx.mlx, W_WIDTH, W_HEIGHT, WIN_TITLE);
+    mlx_key_hook(mlx.window, key_handler, &mlx);
+    render_window(&mlx, data, env);
+    mlx_hook(mlx.window, DESTROY_NOTIFY, 0, close_btn_click, &mlx);
+    mlx_loop(mlx.mlx);
+    return (EXIT_SUCCESS);
 }
 
 int	render_window(t_mlx_env *mlx, t_obj *obj, t_env *env)

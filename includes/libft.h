@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 13:24:25 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/03/23 17:31:22 by tsururukako      ###   ########.fr       */
+/*   Updated: 2025/04/23 14:26:40 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	ft_putstr_fd(char const *s, int fd);
 // void	ft_lstiter(t_list *lst, void (*f)(void *));
 // t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
-char    *get_next_line(int fd);
+char	*get_next_line(int fd);
 int		ft_printf(int fd, const char *fmt, ...);
 
 #endif
