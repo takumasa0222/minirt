@@ -6,7 +6,7 @@
 /*   By: yotsurud <yotsurud@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 13:18:41 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/04/23 13:32:59 by yotsurud         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:25:09 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,4 @@ char	*ft_itoa(int n)
 	ft_setnbr(num, buf, digit + is_0orless - 1);
 	buf[digit + is_0orless] = '\0';
 	return (buf);
-}	
+}
