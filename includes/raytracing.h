@@ -7,6 +7,7 @@
 # define NO_HIT -99
 # define MAX_DIST 65535
 # define EPSILON (1.0f/128)
+# define EPS 0.000001f
 # define RENDERED_SHADOW 0
 # define NOT_RENDERED_SHADOW 1
 # define NO_LIGHT 2
@@ -58,8 +59,11 @@ t_xyz	calc_cam_dir(t_xyz screen_vec, t_xyz cam_vec);
 
 int		hit_nearest_obj(t_obj *obj, t_ray *ray, t_hit_point *hit_p);
 int		hit_shadow_ray(t_obj *obj, t_ray *sh_ray, t_hit_point *hit_p);
+
 void	check_light_and_cam_pos(t_obj *obj, t_lit *lit, t_ray cam_ray);
 void	check_light_pos(t_obj *obj, t_env *env, t_ray cam_ray);
+void	is_light_inside_sp(t_obj *obj, t_lit *lit);
+void	is_light_inside_cy(t_obj *obj, t_lit *lit);
 
 unsigned int	clamp(double value, int min, int max);
 double			clamp_double(double value, double min, double max);
