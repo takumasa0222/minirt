@@ -37,6 +37,8 @@ void	parser(char *filename, int part)
 	}
 	lit = set_get_lit(GET, NULL);
 	env->lit = lit;
+	if (env->flag[0] * env->flag[1] * env->flag[2] == 0)
+		print_error_and_exit("parser", "missing A or C or L");
 }
 
 void	init_parser_data(t_env *env, t_lit *lit, t_obj *obj, int part)
