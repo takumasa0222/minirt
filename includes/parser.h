@@ -6,7 +6,7 @@
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025-04-12 06:06:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/04/12 15:14:05 by yotsurud         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:51:44 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-# include <float.h>
 # include <errno.h>
 # include "libft.h"
 
@@ -34,8 +33,11 @@
 # define VECTOR 4
 # define RGB 5
 # define SPACE "\t\n\v\r\f "
+# define DBL_MAX 1.7976931348623158e+308
+# define DBL_MIN 2.2250738585072014e-308
 
-enum {
+enum
+{
 	A,
 	C,
 	L,
@@ -135,9 +137,6 @@ void			set_struct_xyz(t_xyz *xyz, double arr[3]);
 
 //print_function.c
 void			print_error_and_exit(char *func_name, char *message);
-// void            print_env_data(void);
-// void            print_lit_data(t_lit *lit);
-// void            print_obj_data(void);
 
 //setter_getter.c
 t_env			*set_get_env(int select, t_env *new);
