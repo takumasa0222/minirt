@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raytracing.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 20:10:58 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/04/23 20:16:36 by yotsurud         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:05:16 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define SHINENESS 16
 # define NO_HIT -99
 # define MAX_DIST 65535
+# define EPS 0.000001f
 # define EPSILON 0.0078125f
 # define RENDERED_SHADOW 0
 # define NOT_RENDERED_SHADOW 1
@@ -79,10 +80,17 @@ void			set_h_obj_cy(t_obj *obj, t_ray *ray, t_hit_point *h_obj,
 
 t_xyz			calc_cam_dir(t_xyz screen_vec, t_xyz cam_vec);
 
+int				hit_nearest_obj(t_obj *obj, t_ray *ray, t_hit_point *hit_p);
+int				hit_shadow_ray(t_obj *obj, t_ray *sh_ray, t_hit_point *hit_p);
+
+void			is_light_inside_sp(t_obj *obj, t_lit *lit);
+void			is_light_inside_cy(t_obj *obj, t_lit *lit);
+
 int				hit_nearest_obj(t_obj *obj, t_ray *ray,
 					t_hit_point *hit_p);
 int				hit_shadow_ray(t_obj *obj, t_ray *sh_ray,
 					t_hit_point *hit_p);
+
 void			check_light_and_cam_pos(t_obj *obj, t_lit *lit,
 					t_ray cam_ray);
 void			check_light_pos(t_obj *obj, t_env *env,
