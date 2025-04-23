@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025-04-12 06:06:40 by yotsurud          #+#    #+#             */
 /*   Updated: 2025/04/23 14:51:44 by yotsurud         ###   ########.fr       */
@@ -59,6 +59,7 @@ typedef struct s_lit
 	t_xyz			xyz;
 	double			t;
 	t_xyz			rgb;
+	bool			valid_flag;
 	struct s_lit	*next;
 }	t_lit;
 
