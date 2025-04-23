@@ -49,8 +49,5 @@ int	main(int argc, char **argv)
 	env = set_get_env(GET, NULL);
 	obj = set_get_obj(GET, NULL);
 	init_window(obj, env);
-	free_lit(env->lit);
-	free(env);
-	free_obj(obj);
 	return (0);
 }

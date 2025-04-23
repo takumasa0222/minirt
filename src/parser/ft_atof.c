@@ -33,7 +33,7 @@ char	*calc_integer(double *integer, char *nptr)
 	while (ft_isdigit(*nptr))
 	{
 		if (*integer > DBL_MAX / 10)
-			exit((printf("Error: invalid number\n"), 1));
+			exit((ft_printf(2, "Error: invalid number\n"), 1));
 		*integer = *integer * 10 + *nptr++ - '0';
 	}
 	return (nptr);
@@ -81,7 +81,7 @@ double	ft_atof(char *nptr)
 		nptr++;
 	nptr = calc_decimal(&decimal, nptr, integer);
 	if (*nptr)
-		exit((printf("Error: invalid number\n"), 1));
+		exit((ft_printf(2, "Error: invalid number\n"), 1));
 	else
 		return (sign * (integer + decimal));
 }

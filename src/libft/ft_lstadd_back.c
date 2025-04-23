@@ -6,7 +6,7 @@
 /*   By: yotsurud <yotsurud@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:38:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/04/20 20:40:23 by yotsurud         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:25:34 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	{
 		*lst = new;
 		return ;
-	}	
+	}
 	ptr = ft_lstlast(*lst);
 	ptr->next = new;
 }
