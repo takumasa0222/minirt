@@ -14,6 +14,14 @@
 #include "../../includes/ui.h"
 #include <mlx.h>
 #include <stdlib.h>
+#include <X11/keysym.h>
+
+int	key_handler(int keycode, t_mlx_env *mlx)
+{
+	if (keycode == XK_Escape)
+		close_btn_click(mlx);
+	return (0);
+}
 
 int	close_btn_click(t_mlx_env *mlx)
 {
