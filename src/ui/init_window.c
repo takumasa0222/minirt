@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:54:11 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/04/23 19:36:24 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/04/23 20:44:33 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,18 @@
 #include "../../includes/calc.h"
 #include <mlx.h>
 #include <math.h>
-#include <X11/keysym.h>
 
-int    key_handler(int keycode, t_mlx_env *mlx)
+int	init_window(t_obj *data, t_env *env)
 {
-    if (keycode == XK_Escape)
-        close_btn_click(mlx);
-    return (0);
-}
+	t_mlx_env	mlx;
 
-int    init_window(t_obj *data, t_env *env)
-{
-    t_mlx_env    mlx;
-
-    mlx.mlx = mlx_init();
-    mlx.window = mlx_new_window(mlx.mlx, W_WIDTH, W_HEIGHT, WIN_TITLE);
-    mlx_key_hook(mlx.window, key_handler, &mlx);
-    render_window(&mlx, data, env);
-    mlx_hook(mlx.window, DESTROY_NOTIFY, 0, close_btn_click, &mlx);
-    mlx_loop(mlx.mlx);
-    return (EXIT_SUCCESS);
+	mlx.mlx = mlx_init();
+	mlx.window = mlx_new_window(mlx.mlx, W_WIDTH, W_HEIGHT, WIN_TITLE);
+	mlx_key_hook(mlx.window, key_handler, &mlx);
+	render_window(&mlx, data, env);
+	mlx_hook(mlx.window, DESTROY_NOTIFY, 0, close_btn_click, &mlx);
+	mlx_loop(mlx.mlx);
+	return (EXIT_SUCCESS);
 }
 
 int	render_window(t_mlx_env *mlx, t_obj *obj, t_env *env)
