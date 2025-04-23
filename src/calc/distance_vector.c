@@ -1,36 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   normalize.c                                        :+:      :+:    :+:   */
+/*   distance_vector.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/12 05:29:01 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/04/20 18:52:46 by tamatsuu         ###   ########.fr       */
+/*   Created: 2025/04/20 18:52:11 by tamatsuu          #+#    #+#             */
+/*   Updated: 2025/04/20 18:53:50 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "calc.h"
 
-double	sqr(double x)
+double	squared_norm(t_xyz v)
 {
-	return (x * x);
+	return (sqr(v.x) + sqr(v.y) + sqr(v.z));
 }
 
-double	calc_length2(t_xyz vector)
+double	distance_between(t_xyz a, t_xyz b)
 {
-	return (sqr(vector.x) + sqr(vector.y) + sqr(vector.z));
-}
+	t_xyz	diff;
 
-double	calc_length(t_xyz vector)
-{
-	return (sqrt(calc_length2(vector)));
-}
-
-t_xyz	normalize(t_xyz vector)
-{
-	double	length;
-
-	length = calc_length(vector);
-	return (divid_v_f(vector, length));
+	diff = minus_v1_v2(a, b);
+	return (sqrt(squared_norm(diff)));
 }

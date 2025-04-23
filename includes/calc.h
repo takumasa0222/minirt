@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   calc.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-04-12 06:14:16 by yotsurud          #+#    #+#             */
-/*   Updated: 2025/04/12 15:26:59 by yotsurud         ###   ########.fr       */
+/*   Created: 2025/04/12 06:14:16 by yotsurud          #+#    #+#             */
+/*   Updated: 2025/04/20 18:54:00 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,9 @@ double	sqr(double x);
 double	calc_length2(t_xyz vector);
 double	calc_length(t_xyz vector);
 t_xyz	normalize(t_xyz vector);
+
+// distance_vector.c
+double	squared_norm(t_xyz v);
+double	distance_between(t_xyz a, t_xyz b);
 
 #endif
