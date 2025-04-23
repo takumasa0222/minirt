@@ -39,14 +39,17 @@ double	convert_x_to_screen(int x);
 double	convert_y_to_screen(int y);
 void	set_screen_vector(t_xyz *screen, int x, int y, double fov);
 
-double	hit_sphere(t_obj *obj, t_ray *ray);
-double	hit_plane(t_obj *obj, t_ray *ray);
-double	hit_cylinder(t_obj *obj, t_ray *ray);
-double	hit_cam_ray(t_obj *obj, t_ray *ray);
+double	hit_sphere(t_obj *obj, t_ray *ray, t_hit_point *h_obj, bool rec_hit);
+double	hit_plane(t_obj *obj, t_ray *ray, t_hit_point *h_obj, bool rec_hit);
+double	hit_cylinder(t_obj *obj, t_ray *ray, t_hit_point *h_obj, bool rec_hit);
+double	hit_cam_ray(t_obj *obj, t_ray *ray, t_hit_point *h_obj, bool rec_hit);
 
 double	distance_sphere(double *abcd);
-double	dist_cylndr(double *abcd, t_obj *obj, t_ray *ray);
+double	dist_cylndr(double *abcd, t_obj *obj, t_ray *ray, t_hit_point *h_obj);
 double	hit_cylinder_caps(t_obj *obj, t_ray *ray, t_xyz norm_c);
 double	get_nearest_inter_cy(t_obj *obj, t_xyz *h_pos, double *t, t_xyz norm_c);
 
+void	fill_hit_obj(t_obj *obj, t_ray c_ray, t_hit_point *h_obj);
+void	set_hit_obj(t_obj *obj, t_ray *ray, t_hit_point *h_obj, double dist);
+void	set_h_obj_cy(t_obj *obj, t_ray *ray, t_hit_point *h_obj, double *t);
 #endif

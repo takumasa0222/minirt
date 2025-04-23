@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_window.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:54:11 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/04/20 22:32:55 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/04/23 02:28:12 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	hit_nearest_obj(t_obj *obj, t_ray *ray, t_hit_point *hit_p)
 	obj_cpy = obj;
 	while (obj_cpy)
 	{
-		tmp = hit_cam_ray(obj_cpy, ray);
+		tmp = hit_cam_ray(obj_cpy, ray, hit_p, true);
 		if (tmp > 0 && tmp < MAX_DIST && tmp < hit_p->dist)
 		{
 			hit_p->dist = tmp;
@@ -94,7 +94,7 @@ int	hit_shadow_ray(t_obj *obj, t_ray *sh_ray, t_hit_point *hit_p)
 			i++;
 			continue ;
 		}
-		tmp = hit_cam_ray(obj_cpy, sh_ray);
+		tmp = hit_cam_ray(obj_cpy, sh_ray, hit_p, false);
 		if (tmp > EPSILON && tmp < MAX_DIST && tmp < hit_p->dist)
 		{
 			hit_p->dist = tmp;
@@ -122,7 +122,7 @@ t_obj	get_indexed_obj(int index, t_obj *obj)
 }
 
 // todo : 複数光源に対応するため、env ではだめ
-// need to fix: シャドウレイとの間にある物体の中で光源に最も近い物体が平面である場合、すべて環境光のみとなる
+// need to fix: シャドウレイとの間にある物体の中で光源に最も近い物体が平面である場合、すべて環境光のみとなる: done
 // todo 4/20: 物体に、影が当たるときは、ハードシャドウを完全な黒にするのではなく、物体に合わせた色にすべき: done
 int	calc_shadow(t_obj *obj, t_lit *lit, t_hit_point *hit_p)
 {
@@ -323,21 +323,6 @@ t_xyz	calc_shade(t_obj *obj, t_lit *lit, t_hit_point hit_obj, t_ray cam_ray)
 	return (pls_shade(obj, lit, dot_res, specular_ref));
 }
 
-void	fill_hit_obj(t_obj *obj, t_env *env, t_ray c_ray, t_hit_point *hit_obj)
-{
-	hit_obj->pos = plus_v1_v2(env->cam_xyz, \
-		multi_v_f(c_ray.dir, hit_obj->dist));
-	if (obj->id == SP)
-	{
-		hit_obj->norm = minus_v1_v2(hit_obj->pos, obj->xyz);
-		hit_obj->norm = normalize(hit_obj->norm);
-	}
-	else if (obj->id == PL)
-		hit_obj->norm = normalize(obj->vector);
-	//else if (obj->id == CY)
-		//hit_obj->norm = normalize(obj->vector);
-}
-
 int	set_amb_col(t_xyz *color, t_env *env)
 {
 	color->x = (env->amb_rgb.x / 255.0) * env->amb_t;
@@ -357,7 +342,7 @@ int	ray_tracing(t_obj *obj, t_env *env, t_ray cam_ray, t_xyz *color)
 	if (hit_obj.index < 0)
 		return (set_amb_col(color, env), 0);
 	cpy_obj = get_indexed_obj(hit_obj.index, obj);
-	fill_hit_obj(&cpy_obj, env, cam_ray, &hit_obj);
+	fill_hit_obj(&cpy_obj, cam_ray, &hit_obj);
 	tmp_lit = env->lit;
 	if (hit_obj.index >= 0)
 	{
