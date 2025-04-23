@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:09:51 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/04/23 19:12:08 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/04/23 20:40:43 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_xyz	calc_shade(t_obj *obj, t_lit *lit, t_hit_point hit_obj, t_ray cam_ray)
 	specular_ref = 0.0;
 	incident_dir = minus_v1_v2(lit->xyz, hit_obj.pos);
 	incident_dir = normalize(incident_dir);
-
 	dot_res = fmax(dot(incident_dir, hit_obj.norm), 0.0);
 	if (dot_res > 0)
 	{
