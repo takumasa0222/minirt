@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 00:31:53 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/04/23 02:42:19 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:18:55 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,40 +43,25 @@ void	set_hit_obj(t_obj *obj, t_ray *ray, t_hit_point *h_obj, double dist)
 
 void	set_h_obj_cy(t_obj *obj, t_ray *ray, t_hit_point *h_obj, double *t)
 {
+	t_xyz	obj_center;
+	t_xyz	obj_vector;
+	t_xyz	pos;
+	double	s;
+
 	if (t[0] == NO_HIT)
 		return ;
 	h_obj->dist = t[0];
 	h_obj->pos = plus_v1_v2(ray->pos, multi_v_f(ray->dir, h_obj->dist));
-	t_xyz C = obj->xyz;
-	t_xyz V = normalize(obj->vector);
-	double s = dot(minus_v1_v2(h_obj->pos, C), V);
-
+	obj_center = obj->xyz;
+	obj_vector = normalize(obj->vector);
+	s = dot(minus_v1_v2(h_obj->pos, obj_center), obj_vector);
 	if (s >= 0 && s <= obj->height)
 	{
-		// 側面
-		t_xyz Q = plus_v1_v2(C, multi_v_f(V, s));
-		h_obj->norm = normalize(minus_v1_v2(h_obj->pos, Q));
+		pos = plus_v1_v2(obj_center, multi_v_f(obj_vector, s));
+		h_obj->norm = normalize(minus_v1_v2(h_obj->pos, pos));
 	}
 	else if (s < 0)
-	{
-		// 下キャップ
-		h_obj->norm = multi_v_f(V, -1);
-	}
+		h_obj->norm = multi_v_f(obj_vector, -1);
 	else
-	{
-		// 上キャップ
-		h_obj->norm = V;
-	}
-	// if (t[0] == t[1])
-	// {
-		
-	// }
-	// else if (t[0] == t[2])
-	// {
-		
-	// }
-	// else if (t[0] == t[3])
-	// {
-		
-	// }
+		h_obj->norm = obj_vector;
 }
